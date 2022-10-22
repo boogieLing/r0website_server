@@ -1,0 +1,23 @@
+# 服务器端口
+system:
+  part: :8202
+  stauts: debug
+# log存放目录
+logger:
+  path: ./logs/r0Website_server.log
+# jwt配置
+jwt:
+  sign-key: Crayfishr08202 # !密码
+  expires-time: 3000
+  issuer: r0
+# mongo配置
+mongo:
+  address: 192.168.84.137
+  part: 27017
+  db: gin
+  super-admin-name: admin
+  super-admin-pswd: cherilee233
+# author配置
+author:
+  name: r0
+  email: boogieling_O@qq.com

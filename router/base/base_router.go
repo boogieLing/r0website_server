@@ -1,0 +1,26 @@
+// Package base
+/**
+ * @Author: r0
+ * @Mail: boogieLing_o@qq.com
+ * @Description: 基础接口
+ * @File:  base
+ * @Version: 1.0.0
+ * @Date: 2022/7/3 18:44
+ */
+package base
+
+import (
+	"github.com/gin-gonic/gin"
+	"r0Website-server/r0Ioc"
+)
+
+func InitBaseRouter(Router *gin.RouterGroup) (R gin.IRoutes) {
+	BaseRouter := Router.Group("base")
+	userController := r0Ioc.R0Route.BaseUserController
+	{
+		BaseRouter.POST("login", userController.Login)
+		BaseRouter.POST("register", userController.Register)
+		InitBaseArticleRouter(BaseRouter)
+	}
+	return BaseRouter
+}
