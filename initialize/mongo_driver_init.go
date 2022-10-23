@@ -63,13 +63,22 @@ func MongoConstructor(cfg *config.Mongo) *dao.BasicDaoMongo {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(dsn).SetAuth(credential))
+	var errs []error
 	if err != nil {
 		global.Logger.Error(err)
+		errs = append(errs, err)
 	}
 	if err := client.Ping(ctx, readpref.Primary()); err != nil {
 		global.Logger.Error(err)
+		errs = append(errs, err)
 	}
 	// db := client.Database(cfg.DB)
 	global.Logger.Infof("=== Connected MongoDB:%s ===", cfg.DB)
+	if len(errs) == 0 {
+		global.Logger.Infof("=== Connected MongoDB:%s ===", cfg.DB)
+		fmt.Printf("=== Connected MongoDB:%s ===\n", cfg.DB)
+	} else {
+		fmt.Println(errs)
+	}
 	return &dao.BasicDaoMongo{Mc: client, Mdb: client.Database(cfg.DB)}
 }

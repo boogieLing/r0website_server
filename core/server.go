@@ -22,7 +22,7 @@ func RunWindowsServer() {
 	// 初始化路由
 	Router := router.Routers()
 	// 初始化服务
-	s := initServer(global.Config.System.Part, Router)
+	s := initServer(global.Config.System.Port, Router)
 	// 启动服务器
 	s.ListenAndServe().Error()
 }

@@ -22,7 +22,7 @@ type UserDao struct {
 }
 
 func (*UserDao) CollectionName() string {
-	return "articles"
+	return "user"
 }
 func (ud *UserDao) Collection() *mongo.Collection {
 	return ud.Mdb.Collection(ud.CollectionName())

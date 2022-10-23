@@ -1,6 +1,6 @@
 # 服务器端口
 system:
-  part: :8202
+  port: :8202
   status: debug
 # log存放目录
 logger:
@@ -12,7 +12,7 @@ jwt:
   issuer: r0
 # mongo配置
 mongo:
-  address: 192.168.84.137
+  address: 101.33.218.37 # 需要docker-net网关相同
   part: 27017
   db: r0website_server
   super-admin-name: admin
@@ -21,3 +21,7 @@ mongo:
 author:
   name: r0
   email: boogieling_O@qq.com
+# docker自定义网络的配置
+docker:
+  subnet: 172.97.0.0/16 # docker-net 子网号
+  gateway: 172.97.0.1 # docker-net 网关

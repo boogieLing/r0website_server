@@ -35,3 +35,4 @@ RUN set -x; tar -zxvf /tmp/go1.17.11.linux-amd64.tar.gz -C /usr/local/\
 # 暴露server端口
 EXPOSE 8202
 ENTRYPOINT ["./r0Website-server"]
+# docker exec -it r0website_server /bin/bash

@@ -18,7 +18,7 @@ type SystemConfig struct {
 }
 
 type System struct {
-	Part   string `yaml:"part"`   // 地址
+	Port   string `yaml:"port"`   // 端口
 	Status string `yaml:"status"` // 状态
 }
 

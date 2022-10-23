@@ -7,4 +7,4 @@ go mod tidy
 go build -o ./r0Website-server ./main/main.go
 ./r0Website-server
 
-# chmod +x ./go-build.sh && ./go-build.sh
+# chmod +x ./run-server.sh && ./run-server.sh

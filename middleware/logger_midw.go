@@ -13,7 +13,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
-	"os"
 	"r0Website-server/global"
 	"strings"
 	"time"
@@ -29,19 +28,6 @@ func (box *GINLogFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 }
 
 func Logger() gin.HandlerFunc {
-	file, err := os.OpenFile(global.Config.Logger.Path, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
-	if err != nil && os.IsNotExist(err) {
-		fmt.Println("err:", err)
-	}
-	logger := logrus.New()
-	logger.Out = file
-	logger.SetLevel(logrus.DebugLevel)
-	// logger.SetFormatter(&logrus.TextFormatter{})
-	logger.SetFormatter(new(GINLogFormatter))
-	// logger.SetFormatter(&logrus.TextFormatter{
-	//	TimestampFormat:"2006-01-02 15:04:05",
-	// })
-	// 换一下日期格式
 	return func(c *gin.Context) {
 		startTime := time.Now()
 		c.Next()
@@ -51,6 +37,6 @@ func Logger() gin.HandlerFunc {
 		url := c.Request.RequestURI
 		status := c.Writer.Status()
 		ip := c.ClientIP()
-		logger.Infof(" %3d | %13v | %15s | %s | %s ", status, runTime, ip, method, url)
+		global.Logger.Infof(" %3d | %13v | %15s | %s | %s ", status, runTime, ip, method, url)
 	}
 }

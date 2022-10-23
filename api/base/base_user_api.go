@@ -12,6 +12,7 @@ package base
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"r0Website-server/global"
 	"r0Website-server/models/vo"
 	"r0Website-server/service"
 	"r0Website-server/utils/msg"
@@ -45,6 +46,7 @@ func (u *UserController) Register(c *gin.Context) {
 	}
 	register, err := u.UserService.UserRegister(params)
 	if err != nil {
+		global.Logger.Error(err)
 		c.JSON(http.StatusBadRequest, msg.NewMsg().Failed(err.Error()))
 		return
 	}
