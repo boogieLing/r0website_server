@@ -19,7 +19,7 @@ import (
 )
 
 func InitLogger() {
-	ioWriter := utils.YamlLogFile()
+	ioWriter := utils.NewLogFile()
 	global.Logger = logrus.New()
 	global.Logger.SetOutput(ioWriter)
 	global.Logger.SetLevel(logrus.DebugLevel)

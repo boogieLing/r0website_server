@@ -1,7 +1,7 @@
 # 服务器端口
 system:
   part: :8202
-  stauts: debug
+  status: debug
 # log存放目录
 logger:
   path: ./logs/r0Website_server.log
@@ -14,9 +14,9 @@ jwt:
 mongo:
   address: 192.168.84.137
   part: 27017
-  db: gin
+  db: r0website_server
   super-admin-name: admin
-  super-admin-pswd: cherilee233
+  super-admin-pswd: cherilee233mongo
 # author配置
 author:
   name: r0

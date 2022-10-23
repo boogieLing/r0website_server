@@ -3,7 +3,6 @@ module r0Website-server
 go 1.17
 
 require (
-	github.com/facebookgo/inject v0.0.0-20180706035515-f23751cae28b
 	github.com/fvbock/endless v0.0.0-20170109170031-447134032cb6
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-ego/gse v0.70.2
@@ -20,10 +19,6 @@ require (
 
 require (
 	github.com/aymerick/douceur v0.2.0 // indirect
-	github.com/facebookgo/ensure v0.0.0-20200202191622-63f1cf65ac4c // indirect
-	github.com/facebookgo/stack v0.0.0-20160209184415-751773369052 // indirect
-	github.com/facebookgo/structtag v0.0.0-20150214074306-217e25fb9691 // indirect
-	github.com/facebookgo/subset v0.0.0-20200203212716-c811ad88dec4 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect

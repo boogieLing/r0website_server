@@ -26,12 +26,12 @@ func todayFilename() string {
 	return path + "/" + day + ".log"
 }
 
-// newLogFile 新建当日文件对象
-func newLogFile() *os.File {
+// NewLogFile 新建当日文件对象
+func NewLogFile() *os.File {
 	filename := todayFilename()
 	file, err := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
 	if err != nil {
-		fmt.Println("error")
+		fmt.Println("err:", err)
 	}
 	return file
 }
