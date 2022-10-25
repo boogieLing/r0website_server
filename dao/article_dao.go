@@ -58,7 +58,6 @@ func (ad *ArticleDao) ArticleBaseSearch(params vo.BaseArticleSearchVo, id string
 	author := params.Author
 	pageNumber := params.PageNumber
 	pageSize := params.PageSize
-	pageSkip := int64(0)
 	// 是一个补丁，防止出现WriteNull错误，丑陋的解决方法
 	filter := bson.D{}
 	sort := bson.D{}
@@ -100,11 +99,8 @@ func (ad *ArticleDao) ArticleBaseSearch(params vo.BaseArticleSearchVo, id string
 		// 这里会引起opts的二次SetSort，但目前还没发现问题
 		opts = opts.SetSort(sort).SetProjection(projection)
 	}
-	// 构造分页, 页码从1开始，需要同时指定才能生效
-	if pageNumber != 0 && pageSize != 0 {
-		pageSkip = (pageNumber - 1) * pageSize
-		opts = opts.SetLimit(pageSize).SetSkip(pageSkip)
-	}
+	// 防止全量搜索并构造分页, 页码从1开始，需要同时指定才能生效
+	opts = ad.patchPageOption(pageNumber, pageSize, opts)
 	global.Logger.Infof("ArticleBaseSearch -> Mongo: \n\t[ %+v | %+v | %+v ]", filter, sort, projection)
 	cursor, err := ad.Collection().Find(context.TODO(), filter, opts)
 	if err != nil {
@@ -119,6 +115,10 @@ func (ad *ArticleDao) ArticleBaseSearch(params vo.BaseArticleSearchVo, id string
 		result.Articles[index].UpdateTime = val.UpdateTime.Local()
 		result.Articles[index].CreateTime = val.CreateTime.Local()
 	}
+	result.PageNumber = pageNumber
+	result.PageSize = pageSize
+	result.AnsCount = int64(len(result.Articles))
+	result.TotalCount = ad.CountDocuments(filter)
 	// defer 关闭游标
 	defer func(cursor *mongo.Cursor, ctx context.Context) {
 		err := cursor.Close(ctx)
@@ -129,6 +129,16 @@ func (ad *ArticleDao) ArticleBaseSearch(params vo.BaseArticleSearchVo, id string
 	return &result, nil
 }
 
+// CountDocuments 统计文档总数
+func (ad *ArticleDao) CountDocuments(filter interface{}) int64 {
+	if ans, err := ad.Collection().CountDocuments(context.TODO(), filter); err != nil {
+		global.Logger.Error(err)
+		return -1
+	} else {
+		return ans
+	}
+}
+
 // ArticleCountByUUid 统计有多少文章有此uuid
 func (ad *ArticleDao) ArticleCountByUUid(uuid string) int64 {
 	filter := bson.M{"uuid": uuid}
@@ -137,4 +147,22 @@ func (ad *ArticleDao) ArticleCountByUUid(uuid string) int64 {
 		global.Logger.Error(err)
 	}
 	return count
+}
+
+// patchPageParams 修正分页Option，并获取pageSkip
+func (ad *ArticleDao) patchPageOption(
+	pageNumber, pageSize int64, opts *options.FindOptions,
+) *options.FindOptions {
+	if pageNumber == 0 && pageSize == 0 {
+		pageNumber = 1
+		pageSize = 10
+	}
+	if pageSize >= 200 {
+		pageSize = 200
+	}
+	if pageNumber != 0 && pageSize != 0 {
+		pageSkip := (pageNumber - 1) * pageSize
+		opts = opts.SetLimit(pageSize).SetSkip(pageSkip)
+	}
+	return opts
 }

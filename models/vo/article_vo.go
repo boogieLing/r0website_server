@@ -37,6 +37,7 @@ type AdminArticleAddMetaVo struct {
 	Categories []string `form:"categories"` // 分类
 	DraftFlag  bool     `form:"draft_flag"` // 是否为草稿
 	Overhead   bool     `form:"overhead"`   // 是否顶置
+	PicUrl     string   `json:"pic_url"`    // 图片的链接
 }
 
 // AdminArticleAddFileResultVo 通过AdminArticleAddFileVo提交之后的返回模型
@@ -63,8 +64,12 @@ type BaseArticleSearchVo struct {
 
 // BaseArticleSearchResultVo 模糊搜索返回的结果
 type BaseArticleSearchResultVo struct {
-	Articles []SingleBaseArticleSearchResultVo `json:"articles"` // 文章列表
-	Msg      string                            `json:"msg"`      // 提示信息
+	Articles   []SingleBaseArticleSearchResultVo `json:"articles"`    // 文章列表
+	PageNumber int64                             `json:"page_number"` // 页码
+	PageSize   int64                             `json:"page_size"`   // 页面大小
+	AnsCount   int64                             `json:"ans_count"`   // 结果数量
+	TotalCount int64                             `json:"total_count"` // 总数
+	Msg        string                            `json:"msg"`         // 提示信息
 }
 
 // SingleBaseArticleSearchResultVo 单个模糊搜索返回的结果
@@ -72,6 +77,7 @@ type SingleBaseArticleSearchResultVo struct {
 	Id             primitive.ObjectID `json:"_id" bson:"_id,omitempty"`               // Mongo 主键 _id
 	Title          string             `json:"title" bson:"title"`                     // 文章标题
 	Author         string             `json:"author" bson:"author"`                   // 作者
+	PicUrl         string             `json:"pic_url" bson:"pic_url"`                 // 图片的链接
 	Markdown       string             `json:"markdown" bson:"markdown"`               // md内容
 	ArtLength      int64              `json:"art_length" bson:"art_length"`           // 文章长度
 	ReadsNumber    int64              `json:"reads_number" bson:"reads_number"`       // 阅读数

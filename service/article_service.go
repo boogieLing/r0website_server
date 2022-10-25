@@ -26,8 +26,6 @@ type ArticleService struct {
 	ArticleDao *dao.ArticleDao `R0Ioc:"true"`
 }
 
-const ArticleColl = "articles"
-
 // ArticleADDFile 通过上传文件增加文章
 func (article *ArticleService) ArticleADDFile(
 	params vo.AdminArticleAddFileVo, id string,
@@ -102,6 +100,7 @@ func updateArticleMetaByParams(input *po.Article, params interface{}, uuid strin
 		input.Title = meta.Title
 		input.Author = meta.Author
 		input.Synopsis = meta.Synopsis
+		input.PicUrl = meta.PicUrl
 		input.DeleteFlag = false
 		input.DraftFlag = meta.DraftFlag
 		// input.Detail = ""

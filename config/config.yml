@@ -15,7 +15,7 @@ mongo:
   address: 101.33.218.37 # 需要docker-net网关相同
   part: 27017
   db: r0website_server
-  super-admin-name: admin
+  super-admin-name: readWriteR0
   super-admin-pswd: cherilee233mongo
 # author配置
 author:
