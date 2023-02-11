@@ -125,10 +125,12 @@ type R0IocItem struct {
 var R0Ioc = map[string]*R0IocItem{}
 
 var R0Route = &struct {
-	AdminArticleController *admin.ArticleController
-	AdminUserController    *admin.UserController
-	BaseArticleController  *base.ArticleController
-	BaseUserController     *base.UserController
+	AdminCategoryController *admin.CategoryController
+	AdminArticleController  *admin.ArticleController
+	AdminUserController     *admin.UserController
+	BaseCategoryController  *base.CategoryController
+	BaseArticleController   *base.ArticleController
+	BaseUserController      *base.UserController
 }{}
 
 // InitR0Ioc 初始化容器

@@ -20,3 +20,11 @@ type UniqueError struct {
 func (a *UniqueError) Error() string {
 	return fmt.Sprintf("字段: %s 值已存在，但它应是唯一的!, 值[%s] count: %d", a.UniqueField, a.Msg, a.Count)
 }
+
+type NullError struct {
+	NullField string
+}
+
+func (a *NullError) Error() string {
+	return fmt.Sprintf("字段: %s 未提供", a.NullField)
+}

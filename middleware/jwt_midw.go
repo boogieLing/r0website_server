@@ -54,7 +54,7 @@ func Jwt() gin.HandlerFunc {
 		if token == "" {
 			c.JSON(http.StatusOK, gin.H{
 				"code": 2003,
-				"msg":  "请求头中auth为空",
+				"msg":  "请先登录/获取权限",
 			})
 			c.Abort()
 			return
@@ -64,7 +64,7 @@ func Jwt() gin.HandlerFunc {
 		if !(len(items) == 2 && items[0] == "Bearer") {
 			c.JSON(http.StatusOK, gin.H{
 				"code": 2004,
-				"msg":  "请求头中auth格式有误",
+				"msg":  "请求auth格式有误",
 			})
 			c.Abort()
 			return

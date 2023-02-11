@@ -20,7 +20,7 @@ type Article struct {
 	Title    string `bson:"title"`    // 文章标题
 	Author   string `bson:"author"`   // 作者
 	Synopsis string `bson:"synopsis"` // 备注
-	PicUrl   string `json:"pic_url"`  // 图片的链接
+	PicUrl   string `bson:"pic_url"`  // 图片的链接
 	// Detail         string             `bson:"detail"`          // htm内容
 	Markdown       string    `bson:"markdown"`        // md内容
 	MdWords        string    `bson:"md_words"`        // md分词内容

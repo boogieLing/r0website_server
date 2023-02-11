@@ -61,6 +61,7 @@ func (articleCon *ArticleController) ArticleFormWay(c *gin.Context) {
 			}
 		}
 	}
+
 	ans, err := articleCon.ArticleService.ArticleADDForm(articleForm, articleID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, msg.NewMsg().Failed(err.Error()))

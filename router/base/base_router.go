@@ -15,12 +15,11 @@ import (
 )
 
 func InitBaseRouter(Router *gin.RouterGroup) (R gin.IRoutes) {
-	BaseRouter := Router.Group("base")
 	userController := r0Ioc.R0Route.BaseUserController
 	{
-		BaseRouter.POST("login", userController.Login)
-		BaseRouter.POST("register", userController.Register)
-		InitBaseArticleRouter(BaseRouter)
+		Router.POST("login", userController.Login)
+		Router.POST("register", userController.Register)
+		InitBaseArticleRouter(Router)
 	}
-	return BaseRouter
+	return Router
 }

@@ -26,6 +26,34 @@ type ArticleService struct {
 	ArticleDao *dao.ArticleDao `R0Ioc:"true"`
 }
 
+// AddPraise 增加一次点赞
+func (article *ArticleService) AddPraise(id string) (*vo.BaseArticleSetPVResultVo, error) {
+	if res, err := article.ArticleDao.AddPraise(id); err != nil {
+		return nil, err
+	} else {
+		return &vo.BaseArticleSetPVResultVo{
+			MatchedCount:  res.MatchedCount,
+			ModifiedCount: res.ModifiedCount,
+			UpsertedCount: res.UpsertedCount,
+			Id:            id,
+		}, nil
+	}
+}
+
+// AddPV 增加一次PV
+func (article *ArticleService) AddPV(id string) (*vo.BaseArticleSetPVResultVo, error) {
+	if res, err := article.ArticleDao.AddPV(id); err != nil {
+		return nil, err
+	} else {
+		return &vo.BaseArticleSetPVResultVo{
+			MatchedCount:  res.MatchedCount,
+			ModifiedCount: res.ModifiedCount,
+			UpsertedCount: res.UpsertedCount,
+			Id:            id,
+		}, nil
+	}
+}
+
 // ArticleADDFile 通过上传文件增加文章
 func (article *ArticleService) ArticleADDFile(
 	params vo.AdminArticleAddFileVo, id string,
@@ -61,6 +89,7 @@ func (article *ArticleService) ArticleADDForm(
 	var result vo.AdminArticleAddFormResultVo
 	var input po.Article
 	input.Markdown = params.Markdown
+
 	updateArticleMetaByParams(&input, params, id)
 	insertResult, err := article.ArticleDao.CreateArticle(&input)
 	if err != nil {
@@ -79,6 +108,13 @@ func (article *ArticleService) ArticleBaseSearch(
 	params vo.BaseArticleSearchVo, id string,
 ) (ans *vo.BaseArticleSearchResultVo, err error) {
 	return article.ArticleDao.ArticleBaseSearch(params, id)
+}
+
+// ArticleInCategory 某一分类下的文章
+func (article *ArticleService) ArticleInCategory(
+	params vo.ArticleSearchByCategoryVo,
+) (*vo.BaseArticleSearchResultVo, error) {
+	return article.ArticleDao.ArticleInCategory(params)
 }
 
 // updateArticleMetaByParams 用输入的参数更新文章元信息
@@ -124,7 +160,6 @@ func updateArticleMetaByParams(input *po.Article, params interface{}, uuid strin
 		input.MdWords = utils.WordSplitForSearching(input.Markdown)
 		input.TitleWords = utils.WordSplitForSearching(input.Title)
 	}
-
 }
 
 // checkAndPatchArticleUuid 检查并修补文章uuid的值

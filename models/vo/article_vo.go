@@ -37,7 +37,23 @@ type AdminArticleAddMetaVo struct {
 	Categories []string `form:"categories"` // 分类
 	DraftFlag  bool     `form:"draft_flag"` // 是否为草稿
 	Overhead   bool     `form:"overhead"`   // 是否顶置
-	PicUrl     string   `json:"pic_url"`    // 图片的链接
+	PicUrl     string   `form:"pic_url"`    // 图片的链接
+}
+
+// BaseArticleSetPVResultVo 设置pv之后返回的模型
+type BaseArticleSetPVResultVo struct {
+	MatchedCount  int64  `json:"matched_count" bson:"matched_count"`   // The number of documents matched by the filter.
+	ModifiedCount int64  `json:"modified_count" bson:"modified_count"` // The number of documents modified by the operation.
+	UpsertedCount int64  `json:"upserted_count" bson:"upserted_count"` // The number of documents upserted by the operation.
+	Id            string `json:"id" bson:"id"`
+}
+
+type baseParams struct {
+	Lazy           bool        `json:"lazy" form:"lazy"`                         // 如果采用懒惰加载，则不返回实体内容
+	UpdateTimeSort bo.TimeSort `json:"update_time_sort" form:"update_time_sort"` // 更新时间排序的方向
+	CreateTimeSort bo.TimeSort `json:"create_time_sort" form:"create_time_sort"` // 创建时间排序的方向
+	PageNumber     int64       `json:"page_number" form:"page_number"`           // 分页使用，页码，页码从1开始
+	PageSize       int64       `json:"page_size" form:"page_size"`               // 分页使用，页大小
 }
 
 // AdminArticleAddFileResultVo 通过AdminArticleAddFileVo提交之后的返回模型
@@ -54,12 +70,9 @@ type AdminArticleAddFormResultVo struct {
 
 // BaseArticleSearchVo 搜索模型
 type BaseArticleSearchVo struct {
-	SearchText     string      `json:"search_text"`      // 模糊搜素的内容 允许空格
-	Author         string      `json:"author"`           // 作者名
-	UpdateTimeSort bo.TimeSort `json:"update_time_sort"` // 更新时间排序的方向
-	CreateTimeSort bo.TimeSort `json:"create_time_sort"` // 创建时间排序的方向
-	PageNumber     int64       `json:"page_number"`      // 分页使用，页码，页码从1开始
-	PageSize       int64       `json:"page_size"`        // 分页使用，页大小
+	SearchText string `json:"search_text" form:"search_text"` // 模糊搜素的内容 允许空格
+	Author     string `json:"author" form:"author"`           // 作者名
+	baseParams
 }
 
 // BaseArticleSearchResultVo 模糊搜索返回的结果
@@ -88,4 +101,10 @@ type SingleBaseArticleSearchResultVo struct {
 	CreateTime     time.Time          `json:"create_time" bson:"create_time"`         // 创建时间
 	UpdateTime     time.Time          `json:"update_time" bson:"update_time"`         // 更新时间
 	Score          float64            `json:"score" bson:"score"`                     // mongo全文检索评分
+}
+
+// ArticleSearchByCategoryVo 通过分类搜索文章的模型
+type ArticleSearchByCategoryVo struct {
+	baseParams
+	CategoryName string `json:"category_name"`
 }

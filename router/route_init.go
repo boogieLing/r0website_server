@@ -27,7 +27,11 @@ func Routers() *gin.Engine {
 
 	root := engine.Group("api")
 	{
-		base.InitBaseRouter(root)
+		baseGroup := root.Group("base")
+		{
+			base.InitBaseRouter(baseGroup)
+			base.InitCategoryFileRouter(baseGroup)
+		}
 		adminGroup := root.Group("admin")
 		userController := r0Ioc.R0Route.AdminUserController
 		adminGroup.POST("login", userController.Login)
@@ -35,6 +39,7 @@ func Routers() *gin.Engine {
 		{
 			// TODO 需要鉴权的admin接口
 			admin.InitArticleFileRouter(adminGroup)
+			admin.InitCategoryFileRouter(adminGroup)
 		}
 	}
 	return engine

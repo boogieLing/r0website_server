@@ -12,7 +12,7 @@ jwt:
   issuer: r0
 # mongo配置
 mongo:
-  address: 101.33.218.37 # 需要docker-net网关相同
+  address: 101.33.218.37 # 与docker-net网关或者服务器ip相同
   part: 27017
   db: r0website_server
   super-admin-name: readWriteR0
