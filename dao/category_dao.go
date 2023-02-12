@@ -2,12 +2,14 @@ package dao
 
 import (
 	"context"
+	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"r0Website-server/global"
 	"r0Website-server/models/bo"
 	"r0Website-server/models/po"
 	"r0Website-server/models/vo"
+	"r0Website-server/utils"
 )
 
 type CategoryDao struct {
@@ -113,5 +115,20 @@ func (cd *CategoryDao) ExistsCategory(name string) (bool, error) {
 		return true, nil
 	} else {
 		return false, nil
+	}
+}
+
+// RemoveArticle 将文章移出分类
+func (cd *CategoryDao) RemoveArticle(categories []string, id string) (*mongo.UpdateResult, error) {
+	bsonId := utils.String2HexString24(id)
+	filter := bson.D{{"name", bson.D{{"$in", categories}}}}
+	update := bson.M{"$pull": bson.M{"article_ids": bsonId}, "$inc": bson.M{"count": -1}}
+	fmt.Println(bsonId)
+	deleteRes, err := cd.Collection().UpdateMany(context.TODO(), filter, update)
+	if err != nil {
+		global.Logger.Error(err)
+		return nil, err
+	} else {
+		return deleteRes, nil
 	}
 }

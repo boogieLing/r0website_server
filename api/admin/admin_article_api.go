@@ -72,7 +72,14 @@ func (articleCon *ArticleController) ArticleFormWay(c *gin.Context) {
 
 // ArticleDelete 文章的删除（支持批量删除）
 func (articleCon *ArticleController) ArticleDelete(c *gin.Context) {
-
+	articleId := c.Param("id")
+	count, err := articleCon.ArticleService.DeleteArticle(articleId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, msg.NewMsg().Failed(err.Error()))
+		return
+	} else {
+		c.JSON(http.StatusOK, msg.NewMsg().Success(&vo.ArticleDeleteRes{Count: count}))
+	}
 }
 
 // ArticleOverhead 文章的顶置

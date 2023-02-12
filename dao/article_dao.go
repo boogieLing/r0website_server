@@ -288,3 +288,20 @@ func (ad *ArticleDao) getArticleBaseSearchFilter(
 	}
 	return filter
 }
+
+// DeleteArticle 删除文章
+func (ad *ArticleDao) DeleteArticle(id string) (int64, error) {
+	if bsonId, err := primitive.ObjectIDFromHex(utils.String2HexString24(id)); err != nil {
+		global.Logger.Error(err)
+		return 0, err
+	} else {
+		filter := bson.D{{"_id", bsonId}}
+		deleteRes, err := ad.Collection().DeleteOne(context.TODO(), filter)
+		if err != nil {
+			global.Logger.Error(err)
+			return 0, err
+		} else {
+			return deleteRes.DeletedCount, nil
+		}
+	}
+}

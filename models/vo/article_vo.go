@@ -108,3 +108,13 @@ type ArticleSearchByCategoryVo struct {
 	baseParams
 	CategoryName string `json:"category_name"`
 }
+
+// ArticleDeleteParams 删除
+type ArticleDeleteParams struct {
+	Id string `json:"id" bson:"id"`
+}
+
+// ArticleDeleteRes 删除
+type ArticleDeleteRes struct {
+	Count int64 `json:"count"`
+}

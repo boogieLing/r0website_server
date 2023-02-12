@@ -11,6 +11,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"io/ioutil"
 	"r0Website-server/dao"
@@ -23,7 +24,8 @@ import (
 )
 
 type ArticleService struct {
-	ArticleDao *dao.ArticleDao `R0Ioc:"true"`
+	ArticleDao  *dao.ArticleDao  `R0Ioc:"true"`
+	CategoryDao *dao.CategoryDao `R0Ioc:"true"`
 }
 
 // AddPraise 增加一次点赞
@@ -180,4 +182,23 @@ func (article *ArticleService) checkAndPatchArticleUuid(uuid string) (string, er
 		}
 	}
 	return uuid, nil
+}
+
+// DeleteArticle 删除文章
+func (article *ArticleService) DeleteArticle(id string) (int64, error) {
+	articleInfo, err := article.ArticleBaseSearch(vo.BaseArticleSearchVo{}, id)
+	if err != nil {
+		return 0, err
+	}
+	if articleInfo.TotalCount <= 0 {
+		return 0, nil
+	}
+	categories := articleInfo.Articles[0].Categories
+	if removeRes, err := article.CategoryDao.RemoveArticle(categories, id); err != nil {
+		fmt.Println(err)
+		return 0, err
+	} else {
+		fmt.Println(removeRes)
+	}
+	return article.ArticleDao.DeleteArticle(id)
 }

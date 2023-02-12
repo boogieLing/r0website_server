@@ -19,8 +19,9 @@ func InitArticleFileRouter(r *gin.RouterGroup) {
 	group := r.Group("article")
 	{
 		// 不使用 /*id 的匹配是因为不想处理前后的"/"
-		group.POST("", article.ArticleFormWay)            // 通过编辑的方式增加文章 无id自动生成
-		group.POST(":id", article.ArticleFormWay)         // 通过编辑的方式增加文章 id是必选的
+		group.POST("", article.ArticleFormWay)    // 通过编辑的方式增加文章 无id自动生成
+		group.POST(":id", article.ArticleFormWay) // 通过编辑的方式增加文章 id是必选的
+		group.DELETE(":id", article.ArticleDelete)
 		group.POST("/upload", article.ArticleFileWay)     // 通过上传文件的方式增加文章 无id自动生成
 		group.POST("/upload/:id", article.ArticleFileWay) // 通过上传文件的方式增加文章 id是必选的
 	}
