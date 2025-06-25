@@ -155,7 +155,20 @@ func (ad *ArticleDao) ArticleInCategory(
 	pageSize := params.PageSize
 	filter := bson.D{{"_id", bson.D{{"$in", matchIds}}}}
 	// 防止全量搜索并构造分页, 页码从1开始，需要同时指定才能生效
-	opts := options.Find()
+	opts, err := ad.getArticleBaseSearchOption(vo.BaseArticleSearchVo{
+		SearchText: "",
+		Author:     "",
+		BaseParams: vo.BaseParams{
+			Lazy:           params.Lazy,
+			UpdateTimeSort: params.UpdateTimeSort,
+			CreateTimeSort: params.CreateTimeSort,
+			PageNumber:     params.PageNumber,
+			PageSize:       params.PageSize,
+		},
+	}, "")
+	if err != nil {
+		return nil, err
+	}
 	opts = ad.patchPageOption(&pageNumber, &pageSize, opts)
 
 	cursor, err := ad.Collection().Find(context.TODO(), filter, opts)

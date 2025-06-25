@@ -48,7 +48,8 @@ type BaseArticleSetPVResultVo struct {
 	Id            string `json:"id" bson:"id"`
 }
 
-type baseParams struct {
+// BaseParams 基础参数
+type BaseParams struct {
 	Lazy           bool        `json:"lazy" form:"lazy"`                         // 如果采用懒惰加载，则不返回实体内容
 	UpdateTimeSort bo.TimeSort `json:"update_time_sort" form:"update_time_sort"` // 更新时间排序的方向
 	CreateTimeSort bo.TimeSort `json:"create_time_sort" form:"create_time_sort"` // 创建时间排序的方向
@@ -72,7 +73,7 @@ type AdminArticleAddFormResultVo struct {
 type BaseArticleSearchVo struct {
 	SearchText string `json:"search_text" form:"search_text"` // 模糊搜素的内容 允许空格
 	Author     string `json:"author" form:"author"`           // 作者名
-	baseParams
+	BaseParams
 }
 
 // BaseArticleSearchResultVo 模糊搜索返回的结果
@@ -105,7 +106,7 @@ type SingleBaseArticleSearchResultVo struct {
 
 // ArticleSearchByCategoryVo 通过分类搜索文章的模型
 type ArticleSearchByCategoryVo struct {
-	baseParams
+	BaseParams
 	CategoryName string `json:"category_name"`
 }
 

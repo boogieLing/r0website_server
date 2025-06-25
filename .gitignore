@@ -3,3 +3,5 @@ r0Website-server*
 logs/
 .idea/
 config/*.yml
+go1.17.11.linux-amd64.tar.gz
+.pid
