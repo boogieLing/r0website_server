@@ -43,6 +43,11 @@ func (u *UserService) UserLogin(params vo.LoginVo) (ans *vo.LoginResultVo, err e
 		return nil, errors.New("UserLogin 构造Token失败，请联系管理员" + global.Config.Author.Email)
 	}
 	result.Token = token
+	result.Username = res.Username
+	result.Email = res.Email
+	result.Phone = res.Phone
+	result.Brief = res.Brief
+	result.UserLevel = res.UserLevel
 	return &result, err
 }
 

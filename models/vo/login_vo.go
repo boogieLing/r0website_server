@@ -17,9 +17,10 @@ type LoginVo struct {
 
 // LoginResultVo 登录返回数据
 type LoginResultVo struct {
-	Username string `json:"username" bson:"username"`
-	Email    string `json:"email" bson:"email"`
-	Phone    string `json:"phone" bson:"phone"`
-	Brief    string `json:"brief" bson:"brief"`
-	Token    string `json:"token" bson:"token"`
+	Username  string `json:"username" bson:"username"`
+	Email     string `json:"email" bson:"email"`
+	Phone     string `json:"phone" bson:"phone"`
+	Brief     string `json:"brief" bson:"brief"`
+	Token     string `json:"token" bson:"token"`
+	UserLevel int64  `json:"user_level" bson:"user_level"`
 }
