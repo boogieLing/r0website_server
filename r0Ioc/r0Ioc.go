@@ -131,6 +131,8 @@ var R0Route = &struct {
 	BaseCategoryController  *base.CategoryController
 	BaseArticleController   *base.ArticleController
 	BaseUserController      *base.UserController
+	PicBedAlbumController   *base.PicBedAlbumController
+	PicBedImageController   *base.PicBedImageController
 }{}
 
 // InitR0Ioc 初始化容器
