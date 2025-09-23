@@ -11,6 +11,7 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
+	"r0Website-server/global"
 	"r0Website-server/middleware"
 	"r0Website-server/r0Ioc"
 	"r0Website-server/router/admin"
@@ -21,6 +22,18 @@ import (
 // 日志、跨域、JWT
 // public的路由不需要鉴权 admin/login不需要鉴权（处于登录态才颁发JWT）
 func Routers() *gin.Engine {
+	// 初始化默认图片分类
+	albumService := r0Ioc.R0Route.PicBedAlbumController.AlbumService
+	if albumService != nil {
+		if err := albumService.InitDefaultCategories(); err != nil {
+			global.Logger.Errorf("初始化默认图片分类失败: %v", err)
+		} else {
+			global.Logger.Infoln("✅ 默认图片分类初始化完成")
+		}
+	} else {
+		global.Logger.Error("AlbumService 未初始化，跳过默认图片分类初始化")
+	}
+
 	engine := gin.Default()
 	engine.Use(middleware.Logger())
 	engine.Use(middleware.Cors())

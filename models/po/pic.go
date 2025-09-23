@@ -15,6 +15,9 @@ type Image struct {
 	UploadedAt time.Time          `bson:"uploaded_at"`    // 上传时间
 	Tags       []string           `bson:"tags,omitempty"` // 可选：标签列表
 	EXIF       map[string]string  `bson:"exif,omitempty"` // 可选：EXIF 数据（相机型号、光圈等）
+
+	// 分类和位置信息 - 支持一个图片在多个分类中有不同的位置
+	Positions map[string]CategoryPosition `bson:"positions" json:"positions"` // key: categoryID, value: 分类中的位置信息
 }
 
 // AlbumPosition 表示一张图在图集页面上的显示布局（坐标、尺寸、样式）
@@ -52,4 +55,38 @@ type Album struct {
 	Tags        []string           `bson:"tags,omitempty"`   // 可选：图集标签
 	Author      string             `bson:"author,omitempty"` // 可选：图集创建者
 	Visibility  string             `bson:"visibility"`       // 可见性："public" | "private" | "unlisted"
+}
+
+// CategoryPosition 分类中的位置信息（freeform模式核心）
+type CategoryPosition struct {
+	// 核心位置信息
+	X      float64 `bson:"x" json:"x"`          // X坐标（像素）
+	Y      float64 `bson:"y" json:"y"`          // Y坐标（像素）
+	Width  float64 `bson:"width" json:"width"`  // 宽度（像素）
+	Height float64 `bson:"height" json:"height"` // 高度（像素）
+
+	// 网格对齐信息
+	GridX    int `bson:"gridX" json:"gridX"`     // 网格X位置
+	GridY    int `bson:"gridY" json:"gridY"`     // 网格Y位置
+	GridSize int `bson:"gridSize" json:"gridSize"` // 网格大小（默认10px）
+
+	// 排序信息
+	Row int `bson:"row" json:"row"` // 行号（用于排序）
+	Col int `bson:"col" json:"col"` // 列号（用于排序）
+
+	// 布局模式
+	LayoutMode string `bson:"layoutMode" json:"layoutMode"` // 布局模式：freeform/flex
+
+	// 层级和可见性
+	ZIndex    int  `bson:"zIndex" json:"zIndex"`    // 层级顺序
+	IsVisible bool `bson:"isVisible" json:"isVisible"` // 是否可见
+
+	// 版本控制
+	Version   int       `bson:"version" json:"version"`   // 数据版本
+	UpdatedAt time.Time `bson:"updatedAt" json:"updatedAt"` // 位置更新时间
+
+	// 分类信息
+	CategoryName string    `bson:"categoryName" json:"categoryName"` // 分类名称
+	SortOrder    int       `bson:"sortOrder" json:"sortOrder"`       // 在分类中的排序序号
+	AddedAt      time.Time `bson:"addedAt" json:"addedAt"`          // 添加到分类的时间
 }

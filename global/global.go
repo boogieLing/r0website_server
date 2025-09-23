@@ -12,9 +12,11 @@ package global
 import (
 	"github.com/sirupsen/logrus"
 	"r0Website-server/config"
+	"r0Website-server/utils"
 )
 
 var (
-	Config *config.SystemConfig
-	Logger *logrus.Logger
+	Config     *config.SystemConfig
+	Logger     *logrus.Logger
+	COSClient  *utils.COSClient
 )

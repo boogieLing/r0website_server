@@ -14,7 +14,9 @@ import (
 	"r0Website-server/api/admin"
 	"r0Website-server/api/base"
 	"r0Website-server/dao"
+	"r0Website-server/global"
 	"r0Website-server/initialize"
+	"r0Website-server/utils"
 	"reflect"
 )
 
@@ -125,22 +127,36 @@ type R0IocItem struct {
 var R0Ioc = map[string]*R0IocItem{}
 
 var R0Route = &struct {
-	AdminCategoryController *admin.CategoryController
-	AdminArticleController  *admin.ArticleController
-	AdminUserController     *admin.UserController
-	BaseCategoryController  *base.CategoryController
-	BaseArticleController   *base.ArticleController
-	BaseUserController      *base.UserController
-	PicBedAlbumController   *base.PicBedAlbumController
-	PicBedImageController   *base.PicBedImageController
+	AdminCategoryController   *admin.CategoryController
+	AdminArticleController    *admin.ArticleController
+	AdminUserController       *admin.UserController
+	BaseCategoryController    *base.CategoryController
+	BaseArticleController     *base.ArticleController
+	BaseUserController        *base.UserController
+	PicBedAlbumController     *base.PicBedAlbumController
+	PicBedImageController     *base.PicBedImageController
+	ImageCategoryController   *base.ImageCategoryController
+	TagController             *base.TagController
 }{}
 
 // InitR0Ioc 初始化容器
 func InitR0Ioc(configPath string) {
 	cfg := initialize.InitProdConfig(configPath)
 	basicDao := initialize.MongoConstructor(&cfg.Mongo)
+
+	// 创建COS客户端
+	var cosClient *utils.COSClient
+	if err := initialize.InitCOSClient(cfg); err != nil {
+		fmt.Printf("初始化COS客户端失败: %v\n", err)
+		// 不中断程序，但COS功能将不可用
+		cosClient = nil
+	} else {
+		cosClient = global.COSClient
+	}
+
 	RegisterComponents([]interface{}{
 		cfg,
+		cosClient,
 	}...)
 	RegisterComponentSingle(basicDao, func(item *R0IocItem) {
 		item.Instance.(*dao.BasicDaoMongo).Disconnect()

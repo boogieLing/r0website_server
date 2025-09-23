@@ -113,3 +113,116 @@ func (id *ImageDao) SearchImagesByName(keyword string) ([]*po.Image, error) {
 	}
 	return imgs, err
 }
+
+// UpdateImageCategoryPosition 更新图片在分类中的位置信息
+func (id *ImageDao) UpdateImageCategoryPosition(imageID primitive.ObjectID, categoryID string, position *po.CategoryPosition) error {
+	update := bson.M{
+		"$set": bson.M{
+			"positions." + categoryID: position,
+		},
+	}
+	_, err := id.Collection().UpdateOne(context.TODO(), bson.M{"_id": imageID}, update)
+	if err != nil {
+		global.Logger.Errorf("❌ 更新图片分类位置失败: %v", err)
+	}
+	return err
+}
+
+// RemoveImageFromCategory 从分类中移除图片
+func (id *ImageDao) RemoveImageFromCategory(imageID primitive.ObjectID, categoryID string) error {
+	update := bson.M{
+		"$unset": bson.M{
+			"positions." + categoryID: "",
+		},
+	}
+	_, err := id.Collection().UpdateOne(context.TODO(), bson.M{"_id": imageID}, update)
+	if err != nil {
+		global.Logger.Errorf("❌ 从分类中移除图片失败: %v", err)
+	}
+	return err
+}
+
+// GetImagesByCategory 获取分类下的所有图片
+func (id *ImageDao) GetImagesByCategory(categoryID string) ([]*po.Image, error) {
+	// 使用MongoDB的聚合查询，筛选出包含指定分类的图片
+	pipeline := []bson.M{
+		{
+			"$match": bson.M{
+				"positions." + categoryID: bson.M{"$exists": true},
+			},
+		},
+		{
+			"$addFields": bson.M{
+				"sortOrder": "$positions." + categoryID + ".sortOrder",
+			},
+		},
+		{
+			"$sort": bson.M{"sortOrder": 1},
+		},
+	}
+
+	cursor, err := id.Collection().Aggregate(context.TODO(), pipeline)
+	if err != nil {
+		global.Logger.Errorf("❌ 获取分类图片失败: %v", err)
+		return nil, err
+	}
+	defer cursor.Close(context.TODO())
+
+	var imgs []*po.Image
+	if err = cursor.All(context.TODO(), &imgs); err != nil {
+		global.Logger.Errorf("❌ 解析分类图片失败: %v", err)
+		return nil, err
+	}
+	return imgs, nil
+}
+
+// GetImagesByCategoryWithPagination 分页获取分类下的图片
+func (id *ImageDao) GetImagesByCategoryWithPagination(categoryID string, page, pageSize int) ([]*po.Image, int64, error) {
+	skip := (page - 1) * pageSize
+
+	// 计算总数
+	count, err := id.Collection().CountDocuments(context.TODO(), bson.M{
+		"positions." + categoryID: bson.M{"$exists": true},
+	})
+	if err != nil {
+		global.Logger.Errorf("❌ 计算分类图片数量失败: %v", err)
+		return nil, 0, err
+	}
+
+	// 分页查询
+	pipeline := []bson.M{
+		{
+			"$match": bson.M{
+				"positions." + categoryID: bson.M{"$exists": true},
+			},
+		},
+		{
+			"$addFields": bson.M{
+				"sortOrder": "$positions." + categoryID + ".sortOrder",
+			},
+		},
+		{
+			"$sort": bson.M{"sortOrder": 1},
+		},
+		{
+			"$skip": skip,
+		},
+		{
+			"$limit": pageSize,
+		},
+	}
+
+	cursor, err := id.Collection().Aggregate(context.TODO(), pipeline)
+	if err != nil {
+		global.Logger.Errorf("❌ 分页获取分类图片失败: %v", err)
+		return nil, 0, err
+	}
+	defer cursor.Close(context.TODO())
+
+	var imgs []*po.Image
+	if err = cursor.All(context.TODO(), &imgs); err != nil {
+		global.Logger.Errorf("❌ 解析分页分类图片失败: %v", err)
+		return nil, 0, err
+	}
+	return imgs, count, nil
+}

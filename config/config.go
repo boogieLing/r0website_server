@@ -10,11 +10,12 @@
 package config
 
 type SystemConfig struct {
-	System System `yaml:"system"`
-	Logger Logger `yaml:"logger"`
-	JWT    JWT    `yaml:"jwt"`
-	Mongo  Mongo  `yaml:"mongo"`
-	Author Author `yaml:"author"`
+	System       System       `yaml:"system"`
+	Logger       Logger       `yaml:"logger"`
+	JWT          JWT          `yaml:"jwt"`
+	Mongo        Mongo        `yaml:"mongo"`
+	Author       Author       `yaml:"author"`
+	TencentCloud TencentCloud `yaml:"tencent_cloud"`
 }
 
 type System struct {
@@ -43,4 +44,11 @@ type Mongo struct {
 type Author struct {
 	Name  string `yaml:"name"`
 	Email string `yaml:"email"`
+}
+
+type TencentCloud struct {
+	SecretID  string `yaml:"secret-id"`
+	SecretKey string `yaml:"secret-key"`
+	Region    string `yaml:"region"`
+	Bucket    string `yaml:"bucket"`
 }

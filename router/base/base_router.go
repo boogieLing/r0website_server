@@ -20,6 +20,7 @@ func InitBaseRouter(Router *gin.RouterGroup) (R gin.IRoutes) {
 		Router.POST("login", userController.Login)
 		Router.POST("register", userController.Register)
 		InitBaseArticleRouter(Router)
+		InitPicBedRouter(Router) // 添加图床路由
 	}
 	return Router
 }

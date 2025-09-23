@@ -13,7 +13,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"r0Website-server/global"
 	"time"
 )
 
@@ -39,8 +38,8 @@ func NewLogFile() *os.File {
 }
 
 // YamlLogFile yaml中配置的文件
-func YamlLogFile() *os.File {
-	file, err := os.OpenFile(global.Config.Logger.Path, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+func YamlLogFile(logPath string) *os.File {
+	file, err := os.OpenFile(logPath, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 	if err != nil && os.IsNotExist(err) {
 		fmt.Println("err:", err)
 	}

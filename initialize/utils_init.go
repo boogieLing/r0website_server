@@ -17,6 +17,7 @@ import (
 func InitUtils() {
 	global.Logger.Infoln("InitUtils")
 	initWordSplitSeg()
+	// COS初始化移到R0Ioc初始化中
 }
 func initWordSplitSeg() {
 	var err error
@@ -28,4 +29,19 @@ func initWordSplitSeg() {
 	if err != nil {
 		global.Logger.Error(err)
 	}
+}
+
+func initCOSClient() {
+	// 检查配置是否已初始化
+	if global.Config == nil {
+		global.Logger.Error("全局配置未初始化，跳过COS客户端初始化")
+		return
+	}
+
+	// 初始化COS客户端
+	if err := InitCOSClient(global.Config); err != nil {
+		global.Logger.Errorf("初始化COS客户端失败: %v", err)
+		return
+	}
+	global.Logger.Infoln("COS客户端初始化成功")
 }

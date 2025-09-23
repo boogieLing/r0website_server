@@ -37,9 +37,10 @@ POST /api/base/register
 **请求体：**
 ```json
 {
-  "username": "string",
-  "password": "string",
-  "email": "string"
+  "username": "string",    // 用户名
+  "password": "string",    // 密码
+  "email": "string",       // 邮箱
+  "phone": "string"        // 手机号（可选）
 }
 ```
 
@@ -67,8 +68,8 @@ POST /api/base/login
 **请求体：**
 ```json
 {
-  "username": "string",
-  "password": "string"
+  "email": "string",       // 邮箱
+  "password": "string"     // 密码
 }
 ```
 
@@ -94,13 +95,17 @@ POST /api/base/login
 
 #### 搜索文章
 ```http
-GET /api/base/article?keyword=搜索关键词&page=1&size=10
+GET /api/base/article?search_text=搜索关键词&page_number=1&page_size=10&author=作者名
 ```
 
 **查询参数：**
-- `keyword`（可选）：搜索关键词，支持模糊搜索
-- `page`（可选）：页码，默认 1
-- `size`（可选）：每页大小，默认 10
+- `search_text`（可选）：搜索关键词，支持模糊搜索，允许空格
+- `page_number`（可选）：页码，从1开始，默认 1
+- `page_size`（可选）：每页大小，默认 10
+- `author`（可选）：作者名
+- `create_time_sort`（可选）：创建时间排序方向（1表示升序，-1表示降序）
+- `update_time_sort`（可选）：更新时间排序方向（1表示升序，-1表示降序）
+- `lazy`（可选）：是否懒惰加载，如果为true则不返回实体内容
 
 **响应：**
 ```json
@@ -201,15 +206,18 @@ PUT /api/base/article/{id}/praise
 
 #### 获取分类下的文章
 ```http
-GET /api/base/article/category/{name}?page=1&size=10
+GET /api/base/article/category/{name}?page_number=1&page_size=10&create_time_sort=-1&update_time_sort=-1
 ```
 
 **路径参数：**
 - `name`：分类名称
 
 **查询参数：**
-- `page`（可选）：页码，默认 1
-- `size`（可选）：每页大小，默认 10
+- `page_number`（可选）：页码，从1开始，默认 1
+- `page_size`（可选）：每页大小，默认 10
+- `create_time_sort`（可选）：创建时间排序方向（1表示升序，-1表示降序）
+- `update_time_sort`（可选）：更新时间排序方向（1表示升序，-1表示降序）
+- `lazy`（可选）：是否懒惰加载，如果为true则不返回实体内容
 
 **响应：** 同搜索文章接口
 
@@ -255,11 +263,9 @@ POST /api/base/picbed/album
 **请求体：**
 ```json
 {
-  "name": "图集名称",
-  "description": "图集描述",
-  "cover": "封面图片ID",
-  "tags": ["标签1", "标签2"],
-  "author": "作者名称"
+  "title": "图集标题",           // 必填
+  "description": "图集描述",     // 必填
+  "author": "作者名称"           // 必填
 }
 ```
 
@@ -302,13 +308,29 @@ GET /api/base/picbed/album/search/{keyword}?page=1&size=10
 PUT /api/base/picbed/album/{id}
 ```
 
-**请求体：**
+**请求体：** 使用 `models/po.Album` 结构体，包含以下主要字段：
 ```json
 {
-  "name": "新图集名称",
-  "description": "新图集描述",
-  "cover": "新封面图片ID",
-  "tags": ["新标签1", "新标签2"]
+  "title": "图集标题",
+  "description": "图集描述",
+  "cover_image": "封面图片ID",
+  "image_refs": [
+    {
+      "image_id": "图片ID",
+      "position": {
+        "x": 0.1,
+        "y": 0.2,
+        "width": 0.3,
+        "height": 0.4,
+        "unit": "%"
+      },
+      "caption": "图片标题",
+      "description": "图片描述"
+    }
+  ],
+  "tags": ["标签1", "标签2"],
+  "author": "作者名称",
+  "visibility": "public"
 }
 ```
 
@@ -324,18 +346,20 @@ DELETE /api/base/picbed/album/{id}
 POST /api/base/picbed/image
 ```
 
-**请求体：**
+**请求体：** 使用 `models/po.Image` 结构体
 ```json
 {
-  "name": "图片名称",
-  "description": "图片描述",
-  "url": "图片URL",
-  "width": 1920,
-  "height": 1080,
-  "size": 2048000,
-  "format": "jpg",
-  "tags": ["标签1", "标签2"],
-  "author": "作者名称"
+  "name": "图片名称",              // 必填
+  "cos_url": "腾讯云COS图片地址",  // 必填
+  "width": 1920,                 // 必填，像素
+  "height": 1080,                // 必填，像素
+  "uploaded_at": "2024-01-01T00:00:00Z",  // 必填，ISO时间格式
+  "tags": ["标签1", "标签2"],      // 可选，标签列表
+  "exif": {                      // 可选，EXIF数据
+    "Camera": "Canon EOS R5",
+    "Aperture": "f/2.8",
+    "ISO": "800"
+  }
 }
 ```
 
@@ -425,47 +449,43 @@ PUT /api/base/picbed/image/move
 POST /api/admin/login
 ```
 
-**请求体：**
-```json
-{
-  "username": "admin",
-  "password": "password"
-}
-```
+**注意：** 当前管理员登录接口未实现，仅返回测试信息
 
 **响应：**
 ```json
 {
   "code": 200,
-  "msg": "登录成功",
-  "data": {
-    "token": "jwt_token_string",
-    "user": {
-      "id": "admin_id",
-      "username": "admin",
-      "role": "admin"
-    }
-  }
+  "msg": "Hello",
+  "data": "Hello"
+}
+```
+
+**预计实现后的请求体：**
+```json
+{
+  "email": "admin@example.com",    // 管理员邮箱
+  "password": "admin_password"     // 管理员密码
 }
 ```
 
 ### 文章管理（需要JWT认证）
 
-#### 创建文章
+#### 通过表单创建文章
 ```http
 POST /api/admin/article
 ```
 
-**请求体：**
-```json
-{
-  "title": "文章标题",
-  "content": "文章内容（Markdown格式）",
-  "summary": "文章摘要",
-  "cover": "封面图片URL",
-  "category": "分类名称",
-  "tags": ["标签1", "标签2"]
-}
+**请求体：** `form-data` 格式，包含以下字段：
+```
+title: 文章标题                    // 必填
+author: 作者名称                   // 可选，留空则从上下文获取
+synopsis: 文章备注/简介            // 可选
+tags: 标签1,标签2,标签3           // 可选，逗号分隔
+categories: 分类1,分类2           // 可选，逗号分隔
+draft_flag: false                 // 可选，是否为草稿（true/false）
+overhead: false                   // 可选，是否置顶（true/false）
+pic_url: 封面图片链接             // 可选
+markdown: 文章内容（Markdown格式） // 必填
 ```
 
 #### 更新文章
@@ -489,9 +509,18 @@ POST /api/admin/article/upload
 POST /api/admin/article/upload/{id}
 ```
 
-**请求体：** multipart/form-data
-- `file`：Markdown文件
-- 其他字段同创建文章接口
+**请求体：** `multipart/form-data` 格式，包含以下字段：
+```
+file: Markdown文件                    // 必填，文件上传
+title: 文章标题                       // 必填
+author: 作者名称                      // 可选，留空则从上下文获取
+synopsis: 文章备注/简介               // 可选
+tags: 标签1,标签2,标签3              // 可选，逗号分隔
+categories: 分类1,分类2              // 可选，逗号分隔
+draft_flag: false                    // 可选，是否为草稿（true/false）
+overhead: false                      // 可选，是否置顶（true/false）
+pic_url: 封面图片链接                // 可选
+```
 
 ### 分类管理（需要JWT认证）
 
@@ -500,7 +529,9 @@ POST /api/admin/article/upload/{id}
 POST /api/admin/category/archive
 ```
 
-**请求体：**
+**注意：** 当前接口实现中未找到具体的请求结构体定义，需要根据实际情况确定参数格式
+
+**预计的请求体：**
 ```json
 {
   "category_name": "要归档的分类名称"
@@ -584,6 +615,9 @@ POST /api/admin/category/archive
 
 1. **JWT Token 有效期**：JWT token 默认有效期为 3000 秒（50 分钟），需要在过期前重新获取
 2. **中文搜索**：文章搜索支持中文分词，会自动对标题和内容进行分词处理
-3. **图片上传**：图床功能需要先上传图片获取 URL，然后再创建图片记录
+3. **图片上传**：图床功能需要先将图片上传到腾讯云COS，获取URL后再创建图片记录
 4. **分类归档**：归档操作会将分类下的所有文章设置为未分类状态
 5. **权限控制**：Admin 接口需要管理员权限，普通用户无法访问
+6. **管理员登录**：当前管理员登录接口未实现，仅返回测试数据
+7. **请求格式**：Admin文章接口使用`form-data`格式，不是JSON格式
+8. **图集更新**：更新图集时需要提供完整的`models/po.Album`结构体
