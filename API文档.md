@@ -8,6 +8,13 @@
 
 所有 API 接口都以 `/api` 为前缀。
 
+### 主要功能模块
+- **用户管理**：用户注册、登录、认证
+- **文章管理**：文章CRUD、搜索、点赞、分类管理
+- **图床管理**：图集管理、图片上传、分类管理、标签管理
+- **分类系统**：支持图片在多个分类中的位置管理
+- **标签系统**：标签同步、热门标签、标签搜索
+
 ---
 
 ## 认证说明
@@ -341,27 +348,46 @@ DELETE /api/base/picbed/album/{id}
 
 #### 图片管理
 
-##### 上传图片
+##### 上传图片（直接文件上传）
 ```http
 POST /api/base/picbed/image
 ```
 
-**请求体：** 使用 `models/po.Image` 结构体
+**请求体：** `multipart/form-data` 格式
+```
+file: 图片文件                    // 必填，支持的格式：jpg, jpeg, png, gif, webp
+name: 图片名称                    // 可选，留空则使用文件名
+tags: 标签1,标签2,标签3          // 可选，逗号分隔的标签
+```
+
+**响应：**
 ```json
 {
-  "name": "图片名称",              // 必填
-  "cos_url": "腾讯云COS图片地址",  // 必填
-  "width": 1920,                 // 必填，像素
-  "height": 1080,                // 必填，像素
-  "uploaded_at": "2024-01-01T00:00:00Z",  // 必填，ISO时间格式
-  "tags": ["标签1", "标签2"],      // 可选，标签列表
-  "exif": {                      // 可选，EXIF数据
-    "Camera": "Canon EOS R5",
-    "Aperture": "f/2.8",
-    "ISO": "800"
+  "code": 200,
+  "msg": "图片上传成功",
+  "data": {
+    "id": "图片ID",
+    "name": "图片名称",
+    "cos_url": "腾讯云COS图片地址",
+    "width": 1920,
+    "height": 1080,
+    "size": 2048000,
+    "format": "image/jpeg",
+    "tags": ["标签1", "标签2"],
+    "positions": {
+      "nexus": {
+        "category_id": "nexus",
+        "position": 1,
+        "x": 0,
+        "y": 0
+      }
+    },
+    "uploaded_at": "2024-01-01T00:00:00Z"
   }
 }
 ```
+
+**注意：** 图片会自动上传到腾讯云COS，目录为 `/somnium/primitive/`，并自动添加到 "nexus" 分类
 
 ##### 获取图片详情
 ```http
@@ -437,6 +463,337 @@ PUT /api/base/picbed/image/move
   "image_id": "图片ID",
   "from_album_id": "原图集ID",
   "to_album_id": "目标图集ID"
+}
+```
+
+#### 图片分类管理
+
+##### 创建分类
+```http
+POST /api/base/picbed/category
+```
+
+**请求体：**
+```json
+{
+  "name": "分类名称",              // 必填
+  "description": "分类描述"        // 可选
+}
+```
+
+**响应：**
+```json
+{
+  "code": 200,
+  "msg": "分类创建成功",
+  "data": {
+    "id": "分类ID",
+    "name": "分类名称",
+    "description": "分类描述",
+    "imageCount": 0,
+    "createdAt": "2024-01-01T00:00:00Z"
+  }
+}
+```
+
+##### 获取所有分类
+```http
+GET /api/base/picbed/category
+```
+
+**响应：**
+```json
+{
+  "code": 200,
+  "msg": "获取成功",
+  "data": {
+    "categories": [
+      {
+        "id": "分类ID",
+        "name": "分类名称",
+        "description": "分类描述",
+        "imageCount": 10,
+        "coverImage": "封面图片ID",
+        "createdAt": "2024-01-01T00:00:00Z"
+      }
+    ],
+    "total": 5
+  }
+}
+```
+
+##### 获取分类详情
+```http
+GET /api/base/picbed/category/{id}
+```
+
+##### 更新分类
+```http
+PUT /api/base/picbed/category/{id}
+```
+
+**请求体：**
+```json
+{
+  "name": "新分类名称",
+  "description": "新分类描述"
+}
+```
+
+##### 删除分类
+```http
+DELETE /api/base/picbed/category/{id}
+```
+
+##### 获取分类中的图片
+```http
+GET /api/base/picbed/category/{id}/images?page=1&size=10&sort=position&order=asc
+```
+
+**查询参数：**
+- `page`（可选）：页码，默认 1
+- `size`（可选）：每页大小，默认 10
+- `sort`（可选）：排序字段，支持 position, createdAt
+- `order`（可选）：排序方式（asc/desc）
+
+**响应：**
+```json
+{
+  "code": 200,
+  "msg": "获取成功",
+  "data": {
+    "images": [
+      {
+        "id": "图片ID",
+        "name": "图片名称",
+        "cos_url": "腾讯云COS地址",
+        "width": 1920,
+        "height": 1080,
+        "position": {
+          "category_id": "分类ID",
+          "position": 1,
+          "x": 0,
+          "y": 0
+        }
+      }
+    ],
+    "total": 20,
+    "page": 1,
+    "size": 10
+  }
+}
+```
+
+##### 添加图片到分类
+```http
+POST /api/base/picbed/category/{id}/images
+```
+
+**请求体：**
+```json
+{
+  "imageId": "图片ID",
+  "position": 1,                    // 可选，位置序号
+  "x": 0,                          // 可选，x坐标
+  "y": 0                           // 可选，y坐标
+}
+```
+
+##### 从分类移除图片
+```http
+DELETE /api/base/picbed/category/{id}/images?imageId=图片ID
+```
+
+##### 更新图片排序
+```http
+PUT /api/base/picbed/category/{id}/images/sort
+```
+
+**请求体：**
+```json
+{
+  "imageIds": ["图片ID1", "图片ID2", "图片ID3"]
+}
+```
+
+##### 设置分类封面
+```http
+PUT /api/base/picbed/category/{id}/cover
+```
+
+**请求体：**
+```json
+{
+  "coverImageId": "封面图片ID"
+}
+```
+
+#### 标签管理
+
+##### 创建标签
+```http
+POST /api/base/picbed/tag
+```
+
+**请求体：**
+```json
+{
+  "name": "标签名称",              // 必填
+  "displayName": "显示名称",       // 可选
+  "description": "标签描述",       // 可选
+  "color": "#FF6B6B",             // 可选，颜色代码
+  "category": "分类"               // 可选，标签分类
+}
+```
+
+**响应：**
+```json
+{
+  "code": 200,
+  "msg": "标签创建成功",
+  "data": {
+    "tagId": "标签ID"
+  }
+}
+```
+
+##### 获取所有标签
+```http
+GET /api/base/picbed/tag?category=分类名称
+```
+
+**查询参数：**
+- `category`（可选）：按分类筛选
+
+**响应：**
+```json
+{
+  "code": 200,
+  "msg": "获取成功",
+  "data": {
+    "tags": [
+      {
+        "id": "标签ID",
+        "name": "标签名称",
+        "displayName": "显示名称",
+        "description": "标签描述",
+        "color": "#FF6B6B",
+        "category": "分类",
+        "imageCount": 10,
+        "createdAt": "2024-01-01T00:00:00Z"
+      }
+    ],
+    "total": 15
+  }
+}
+```
+
+##### 获取热门标签
+```http
+GET /api/base/picbed/tag/popular?limit=20&category=分类名称
+```
+
+**查询参数：**
+- `limit`（可选）：返回数量，默认 20
+- `category`（可选）：按分类筛选
+
+##### 搜索标签
+```http
+GET /api/base/picbed/tag/search?keyword=搜索关键词
+```
+
+**查询参数：**
+- `keyword`（必填）：搜索关键词，支持名称和显示名称模糊搜索
+
+##### 批量创建标签
+```http
+POST /api/base/picbed/tag/batch
+```
+
+**请求体：**
+```json
+{
+  "tags": [
+    {
+      "name": "标签名称1",
+      "displayName": "显示名称1",
+      "description": "描述1",
+      "color": "#FF6B6B",
+      "category": "分类1"
+    },
+    {
+      "name": "标签名称2",
+      "displayName": "显示名称2",
+      "description": "描述2",
+      "color": "#4ECDC4",
+      "category": "分类2"
+    }
+  ]
+}
+```
+
+**响应：**
+```json
+{
+  "code": 200,
+  "msg": "批量创建标签完成",
+  "data": {
+    "createdTags": ["标签ID1", "标签ID2"],
+    "count": 2
+  }
+}
+```
+
+##### 获取标签详情
+```http
+GET /api/base/picbed/tag/{id}
+```
+
+##### 更新标签
+```http
+PUT /api/base/picbed/tag/{id}
+```
+
+**请求体：**
+```json
+{
+  "name": "新标签名称",
+  "displayName": "新显示名称",
+  "description": "新描述",
+  "color": "#新颜色",
+  "category": "新分类"
+}
+```
+
+##### 删除标签
+```http
+DELETE /api/base/picbed/tag/{id}
+```
+
+##### 获取标签中的图片
+```http
+GET /api/base/picbed/tag/{id}/images?page=1&size=20
+```
+
+**响应：**
+```json
+{
+  "code": 200,
+  "msg": "获取成功",
+  "data": {
+    "images": [
+      {
+        "id": "图片ID",
+        "name": "图片名称",
+        "cos_url": "腾讯云COS地址",
+        "width": 1920,
+        "height": 1080
+      }
+    ],
+    "total": 50,
+    "page": 1,
+    "pageSize": 20
+  }
 }
 ```
 
@@ -604,6 +961,8 @@ POST /api/admin/category/archive
 
 ## 更新记录
 
+- 2024.09：重构图片管理功能，新增分类管理和标签管理，支持图片-分类倒排索引和标签同步
+- 2024.09：新增直接图片上传接口，支持腾讯云COS自动上传，文件格式验证和标签同步
 - 2024.01：新增图床管理功能，包括图集和图片管理
 - 2023.12：增加文章点赞功能
 - 2023.11：优化中文分词和搜索功能
@@ -615,9 +974,16 @@ POST /api/admin/category/archive
 
 1. **JWT Token 有效期**：JWT token 默认有效期为 3000 秒（50 分钟），需要在过期前重新获取
 2. **中文搜索**：文章搜索支持中文分词，会自动对标题和内容进行分词处理
-3. **图片上传**：图床功能需要先将图片上传到腾讯云COS，获取URL后再创建图片记录
-4. **分类归档**：归档操作会将分类下的所有文章设置为未分类状态
-5. **权限控制**：Admin 接口需要管理员权限，普通用户无法访问
-6. **管理员登录**：当前管理员登录接口未实现，仅返回测试数据
-7. **请求格式**：Admin文章接口使用`form-data`格式，不是JSON格式
-8. **图集更新**：更新图集时需要提供完整的`models/po.Album`结构体
+3. **图片上传**：
+   - 直接上传接口：支持 multipart/form-data 格式，自动上传到腾讯云COS
+   - 手动创建接口：需要先将图片上传到腾讯云COS，获取URL后再创建图片记录
+   - 所有新图片自动添加到 "nexus" 分类
+4. **分类管理**：支持图片在多个分类中的位置管理，使用倒排索引实现高效查询
+5. **标签同步**：上传图片时会自动同步标签，维护标签-图片倒排索引
+6. **腾讯云COS**：图片存储在 `/somnium/primitive/` 目录下，支持自动文件格式验证
+7. **分类归档**：归档操作会将分类下的所有文章设置为未分类状态
+8. **权限控制**：Admin 接口需要管理员权限，普通用户无法访问
+9. **管理员登录**：当前管理员登录接口未实现，仅返回测试数据
+10. **请求格式**：Admin文章接口使用`form-data`格式，不是JSON格式
+11. **图集更新**：更新图集时需要提供完整的`models/po.Album`结构体
+12. **批量操作**：标签支持批量创建，提高操作效率
