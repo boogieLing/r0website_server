@@ -2,30 +2,30 @@
 
 ## 📑 目录<a name="📑-目录"></a>
 
-- [🔍 概述](#概述)
-- [🔐 认证说明](#认证说明)
-- [👥 Base API](#base-api公共接口)
-  - [用户管理](#用户管理)
-  - [文章管理](#文章管理)
-  - [分类管理](#分类管理)
-  - [图床管理](#图床管理)
-    - [图集管理](#图集管理)
-    - [图片管理](#图片管理)
-    - [图片分类管理](#图片分类管理)
-    - [标签管理](#标签管理)
-- [🔧 Admin API](#admin-api管理接口)
-  - [管理员登录](#管理员登录)
-  - [文章管理](#admin-文章管理)
-  - [分类管理](#admin-分类管理)
-- [📋 响应格式说明](#响应格式说明)
-- [📄 分页参数说明](#分页参数说明)
-- [❌ 错误处理](#错误处理)
-- [🔄 更新记录](#更新记录)
-- [⚠️ 注意事项](#注意事项)
+- [🔍 概述](#overview)
+- [🔐 认证说明](#auth)
+- [👥 Base API](#base-api)
+  - [用户管理](#user)
+  - [文章管理](#article)
+  - [分类管理](#category)
+  - [图床管理](#picbed)
+    - [图集管理](#album)
+    - [图片管理](#image)
+    - [图片分类管理](#picbed-category)
+    - [标签管理](#tag)
+- [🔧 Admin API](#admin-api)
+  - [管理员登录](#admin-login)
+  - [文章管理](#admin-article)
+  - [分类管理](#admin-category)
+- [📋 响应格式说明](#response)
+- [📄 分页参数说明](#pagination)
+- [❌ 错误处理](#error)
+- [🔄 更新记录](#changelog)
+- [⚠️ 注意事项](#note)
 
 ---
 
-## 🔍 概述<a name="概述"></a>
+## 🔍 概述<a name="overview"></a>
 
 本文档描述了 r0Website-server 的所有 API 接口。API 分为两个主要分组：
 - **Base API**：公共接口，无需认证
@@ -34,7 +34,7 @@
 所有 API 接口都以 `/api` 为前缀。
 
 ### 主要功能模块
-- **用户管理**：用户注册、登录、认证
+- **用户管理**：用户注��、登录、认证
 - **文章管理**：文章CRUD、搜索、点赞、分类管理
 - **图床管理**：图集管理、图片上传、分类管理、标签管理
 - **分类系统**：支持图片在多个分类中的位置管理
@@ -44,7 +44,7 @@
 
 ---
 
-## 🔐 认证说明<a name="认证说明"></a>
+## 🔐 认证说明<a name="auth"></a>
 
 ### JWT 认证
 Admin API 大部分接口需要 JWT 认证。在请求头中添加：
@@ -63,9 +63,9 @@ Authorization: Bearer <your_jwt_token>
 
 ---
 
-## 👥 Base API（公共接口）<a name="base-api公共接口"></a>
+## 👥 Base API（公共接口）<a name="base-api"></a>
 
-### 用户管理<a name="用户管理"></a>
+### 用户管理<a name="user"></a>
 
 #### 用户注册
 ```http
@@ -129,7 +129,7 @@ POST /api/base/login
 
 ---
 
-### 文章管理<a name="文章管理"></a>
+### 文章管理<a name="article"></a>
 
 [🔝 返回目录](#📑-目录)
 
@@ -139,7 +139,7 @@ GET /api/base/article?search_text=搜索关键词&page_number=1&page_size=10&aut
 ```
 
 **查询参数：**
-- `search_text`（可选）：搜索关键词，支持模糊搜索，允许空格
+- `search_text`（可选）：搜索关键���，支持模糊搜索，允许空格
 - `page_number`（可选）：页码，从1开始，默认 1
 - `page_size`（可选）：每页大小，默认 10
 - `author`（可选）：作者名
@@ -255,7 +255,7 @@ GET /api/base/article/category/{name}?page_number=1&page_size=10&create_time_sor
 **查询参数：**
 - `page_number`（可选）：页码，从1开始，默认 1
 - `page_size`（可选）：每页大小，默认 10
-- `create_time_sort`（可选）：创建时间排序方向（1表示升序，-1表示降序）
+- `create_time_sort`（可选）：创建时间排序���向（1表示升序，-1表示降序）
 - `update_time_sort`（可选）：更新时间排序方向（1表示升序，-1表示降序）
 - `lazy`（可选）：是否懒惰加载，如果为true则不返回实体内容
 
@@ -263,7 +263,7 @@ GET /api/base/article/category/{name}?page_number=1&page_size=10&create_time_sor
 
 ---
 
-### 分类管理<a name="分类管理"></a>
+### 分类管理<a name="category"></a>
 
 [🔝 返回目录](#📑-目录)
 
@@ -293,9 +293,9 @@ GET /api/base/category/all
 
 ---
 
-### 图床管理<a name="图床管理"></a>
+### 图床管理<a name="picbed"></a>
 
-#### 图集管理<a name="图集管理"></a>
+#### 图集管理<a name="album"></a>
 
 ##### 创建图集
 ```http
@@ -354,7 +354,7 @@ PUT /api/base/picbed/album/{id}
 ```json
 {
   "title": "图集标题",
-  "description": "图集描述",
+  "description": "图集描��",
   "cover_image": "封面图片ID",
   "image_refs": [
     {
@@ -381,7 +381,7 @@ PUT /api/base/picbed/album/{id}
 DELETE /api/base/picbed/album/{id}
 ```
 
-#### 图片管理<a name="图片管理"></a>
+#### 图片管理<a name="image"></a>
 
 ##### 上传图片（直接文件上传）
 ```http
@@ -501,7 +501,7 @@ PUT /api/base/picbed/image/move
 }
 ```
 
-#### 图片分类管理<a name="图片分类管理"></a>
+#### 图片分类管理<a name="picbed-category"></a>
 
 ##### 创建分类
 ```http
@@ -546,7 +546,7 @@ GET /api/base/picbed/category
       {
         "id": "分类ID",
         "name": "分类名称",
-        "description": "分类描述",
+        "description": "���类描述",
         "imageCount": 10,
         "coverImage": "封面图片ID",
         "createdAt": "2024-01-01T00:00:00Z"
@@ -663,7 +663,7 @@ PUT /api/base/picbed/category/{id}/cover
 }
 ```
 
-#### 标签管理<a name="标签管理"></a>
+#### 标签管理<a name="tag"></a>
 
 ##### 创建标签
 ```http
@@ -725,11 +725,11 @@ GET /api/base/picbed/tag?category=分类名称
 
 ##### 获取热门标签
 ```http
-GET /api/base/picbed/tag/popular?limit=20&category=分类名称
+GET /api/base/picbed/tag/popular?limit=20&category=分类名��
 ```
 
 **查询参数：**
-- `limit`（可选）：返回数量，默认 20
+- `limit`（可选）：返回数量，默��� 20
 - `category`（可选）：按分类筛选
 
 ##### 搜索标签
@@ -836,9 +836,9 @@ GET /api/base/picbed/tag/{id}/images?page=1&size=20
 
 ---
 
-## 🔧 Admin API（管理接口）<a name="admin-api管理接口"></a>
+## 🔧 Admin API（管理接口）<a name="admin-api"></a>
 
-### 管理员登录<a name="管理员登录"></a>
+### 管理员登录<a name="admin-login"></a>
 ```http
 POST /api/admin/login
 ```
@@ -862,7 +862,7 @@ POST /api/admin/login
 }
 ```
 
-### 文章管理（需要JWT认证）<a name="admin-文章管理"></a>
+### 文章管理（需要JWT认���）<a name="admin-article"></a>
 
 #### 通过表单创建文章
 ```http
@@ -909,14 +909,14 @@ file: Markdown文件                    // 必填，文件上传
 title: 文章标题                       // 必填
 author: 作者名称                      // 可选，留空则从上下文获取
 synopsis: 文章备注/简介               // 可选
-tags: 标签1,标签2,标签3              // 可选，逗号分隔
+tags: 标签1,标签2,标签3              // 可���，逗号分隔
 categories: 分类1,分类2              // 可选，逗号分隔
 draft_flag: false                    // 可选，是否为草稿（true/false）
 overhead: false                      // 可选，是否置顶（true/false）
 pic_url: 封面图片链接                // 可选
 ```
 
-### 分类管理（需要JWT认证）<a name="admin-分类管理"></a>
+### 分类管理（需要JWT认证）<a name="admin-category"></a>
 
 #### 归档文章分类
 ```http
@@ -934,7 +934,7 @@ POST /api/admin/category/archive
 
 ---
 
-## 📋 响应格式说明<a name="响应格式说明"></a>
+## 📋 响应格式说明<a name="response"></a>
 
 ### 统一响应格式
 所有 API 接口都使用以下统一响应格式：
@@ -959,7 +959,7 @@ POST /api/admin/category/archive
 
 ---
 
-## 📄 分页参数说明<a name="分页参数说明"></a>
+## 📄 分页参数说明<a name="pagination"></a>
 
 支持分页的接口使用以下参数：
 - `page`：页码，从 1 开始
@@ -986,7 +986,7 @@ POST /api/admin/category/archive
 
 ---
 
-## ❌ 错误处理<a name="错误处理"></a>
+## ❌ 错误处理<a name="error"></a>
 
 当发生错误时，API 会返回相应的错误信息：
 
@@ -1002,10 +1002,10 @@ POST /api/admin/category/archive
 
 ---
 
-## 🔄 更新记录<a name="更新记录"></a>
+## 🔄 更新记录<a name="changelog"></a>
 
-- 2024.09：重构图片管理功能，新增分类管理和标签管理，支持图片-分类倒排索引和标签同步
-- 2024.09：新增直接图片上传接口，支持腾讯云COS自动上传，文件格式验证和标签同步
+- 2024.09：重构图片管理功能，新增���类管理和标签管理，支持图片-分类倒排索引和标签同步
+- 2024.09：新增直接图片上传接口，���持腾讯云COS自动上传，文件格式验证和标签同步
 - 2024.01：新增图床管理功能，包括图集和图片管理
 - 2023.12：增加文章点赞功能
 - 2023.11：优化中文分词和搜索功能
@@ -1015,7 +1015,7 @@ POST /api/admin/category/archive
 
 ---
 
-## ⚠️ 注意事项<a name="注意事项"></a>
+## ⚠️ 注意事项<a name="note"></a>
 
 1. **JWT Token 有效期**：JWT token 默认有效期为 3000 秒（50 分钟），需要在过期前重新获取
 2. **中文搜索**：文章搜索支持中文分词，会自动对标题和内容进行分词处理
@@ -1028,9 +1028,9 @@ POST /api/admin/category/archive
 6. **腾讯云COS**：图片存储在 `/somnium/primitive/` 目录下，支持自动文件格式验证
 7. **分类归档**：归档操作会将分类下的所有文章设置为未分类状态
 8. **权限控制**：Admin 接口需要管理员权限，普通用户无法访问
-9. **管理员登录**：当前管理员登录接口未实现，仅返回测试数据
+9. **管理员登录**：当前��理员登录接口未实现，仅返回测试数据
 10. **请求格式**：Admin文章接口使用`form-data`格式，不是JSON格式
 11. **图集更新**：更新图集时需要提供完整的`models/po.Album`结构体
-12. **批量操作**：标签支持批量创建，提高操作效率
+12. **批量操作**：标签支持批量创建，提高操作���率
 
 [🔝 返回目录](#📑-目录)
