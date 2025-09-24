@@ -1,10 +1,10 @@
 # r0Website-server API 文档
 
-## 📑 目录
+## 📑 目录<a name="📑-目录"></a>
 
 - [🔍 概述](#概述)
 - [🔐 认证说明](#认证说明)
-- [👥 Base API（公共接口）](#base-api公共接口)
+- [👥 Base API](#base-api公共接口)
   - [用户管理](#用户管理)
   - [文章管理](#文章管理)
   - [分类管理](#分类管理)
@@ -13,10 +13,10 @@
     - [图片管理](#图片管理)
     - [图片分类管理](#图片分类管理)
     - [标签管理](#标签管理)
-- [🔧 Admin API（管理接口）](#admin-api管理接口)
+- [🔧 Admin API](#admin-api管理接口)
   - [管理员登录](#管理员登录)
-  - [文章管理（需要JWT认证）](#admin-文章管理)
-  - [分类管理（需要JWT认证）](#admin-分类管理)
+  - [文章管理](#admin-文章管理)
+  - [分类管理](#admin-分类管理)
 - [📋 响应格式说明](#响应格式说明)
 - [📄 分页参数说明](#分页参数说明)
 - [❌ 错误处理](#错误处理)
@@ -25,7 +25,7 @@
 
 ---
 
-## 🔍 概述<br><a name="概述"></a>
+## 🔍 概述<a name="概述"></a>
 
 本文档描述了 r0Website-server 的所有 API 接口。API 分为两个主要分组：
 - **Base API**：公共接口，无需认证
@@ -44,7 +44,7 @@
 
 ---
 
-## 🔐 认证说明<br><a name="认证说明"></a>
+## 🔐 认证说明<a name="认证说明"></a>
 
 ### JWT 认证
 Admin API 大部分接口需要 JWT 认证。在请求头中添加：
@@ -63,9 +63,9 @@ Authorization: Bearer <your_jwt_token>
 
 ---
 
-## 👥 Base API（公共接口）<br><a name="base-api公共接口"></a>
+## 👥 Base API（公共接口）<a name="base-api公共接口"></a>
 
-### 用户管理<br><a name="用户管理"></a>
+### 用户管理<a name="用户管理"></a>
 
 #### 用户注册
 ```http
@@ -129,7 +129,7 @@ POST /api/base/login
 
 ---
 
-### 文章管理<br><a name="文章管理"></a>
+### 文章管理<a name="文章管理"></a>
 
 [🔝 返回目录](#📑-目录)
 
@@ -263,7 +263,7 @@ GET /api/base/article/category/{name}?page_number=1&page_size=10&create_time_sor
 
 ---
 
-### 分类管理<br><a name="分类管理"></a>
+### 分类管理<a name="分类管理"></a>
 
 [🔝 返回目录](#📑-目录)
 
@@ -293,9 +293,9 @@ GET /api/base/category/all
 
 ---
 
-### 图床管理
+### 图床管理<a name="图床管理"></a>
 
-#### 图集管理
+#### 图集管理<a name="图集管理"></a>
 
 ##### 创建图集
 ```http
@@ -381,7 +381,7 @@ PUT /api/base/picbed/album/{id}
 DELETE /api/base/picbed/album/{id}
 ```
 
-#### 图片管理
+#### 图片管理<a name="图片管理"></a>
 
 ##### 上传图片（直接文件上传）
 ```http
@@ -501,7 +501,7 @@ PUT /api/base/picbed/image/move
 }
 ```
 
-#### 图片分类管理
+#### 图片分类管理<a name="图片分类管理"></a>
 
 ##### 创建分类
 ```http
@@ -663,7 +663,7 @@ PUT /api/base/picbed/category/{id}/cover
 }
 ```
 
-#### 标签管理
+#### 标签管理<a name="标签管理"></a>
 
 ##### 创建标签
 ```http
@@ -836,9 +836,9 @@ GET /api/base/picbed/tag/{id}/images?page=1&size=20
 
 ---
 
-## 🔧 Admin API（管理接口）<br><a name="admin-api管理接口"></a>
+## 🔧 Admin API（管理接口）<a name="admin-api管理接口"></a>
 
-### 管理员登录<br><a name="管理员登录"></a>
+### 管理员登录<a name="管理员登录"></a>
 ```http
 POST /api/admin/login
 ```
@@ -862,7 +862,7 @@ POST /api/admin/login
 }
 ```
 
-### 文章管理（需要JWT认证）<br><a name="admin-文章管理"></a>
+### 文章管理（需要JWT认证）<a name="admin-文章管理"></a>
 
 #### 通过表单创建文章
 ```http
@@ -916,7 +916,7 @@ overhead: false                      // 可选，是否置顶（true/false）
 pic_url: 封面图片链接                // 可选
 ```
 
-### 分类管理（需要JWT认证）<br><a name="admin-分类管理"></a>
+### 分类管理（需要JWT认证）<a name="admin-分类管理"></a>
 
 #### 归档文章分类
 ```http
@@ -934,7 +934,7 @@ POST /api/admin/category/archive
 
 ---
 
-## 📋 响应格式说明<br><a name="响应格式说明"></a>
+## 📋 响应格式说明<a name="响应格式说明"></a>
 
 ### 统一响应格式
 所有 API 接口都使用以下统一响应格式：
@@ -959,7 +959,7 @@ POST /api/admin/category/archive
 
 ---
 
-## 📄 分页参数说明<br><a name="分页参数说明"></a>
+## 📄 分页参数说明<a name="分页参数说明"></a>
 
 支持分页的接口使用以下参数：
 - `page`：页码，从 1 开始
@@ -986,7 +986,7 @@ POST /api/admin/category/archive
 
 ---
 
-## ❌ 错误处理<br><a name="错误处理"></a>
+## ❌ 错误处理<a name="错误处理"></a>
 
 当发生错误时，API 会返回相应的错误信息：
 
@@ -1002,7 +1002,7 @@ POST /api/admin/category/archive
 
 ---
 
-## 🔄 更新记录<br><a name="更新记录"></a>
+## 🔄 更新记录<a name="更新记录"></a>
 
 - 2024.09：重构图片管理功能，新增分类管理和标签管理，支持图片-分类倒排索引和标签同步
 - 2024.09：新增直接图片上传接口，支持腾讯云COS自动上传，文件格式验证和标签同步
@@ -1015,7 +1015,7 @@ POST /api/admin/category/archive
 
 ---
 
-## ⚠️ 注意事项<br><a name="注意事项"></a>
+## ⚠️ 注意事项<a name="注意事项"></a>
 
 1. **JWT Token 有效期**：JWT token 默认有效期为 3000 秒（50 分钟），需要在过期前重新获取
 2. **中文搜索**：文章搜索支持中文分词，会自动对标题和内容进行分词处理
