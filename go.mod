@@ -11,6 +11,7 @@ require (
 	github.com/russross/blackfriday/v2 v2.1.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/sony/sonyflake v1.0.0
+	github.com/tencentyun/cos-go-sdk-v5 v0.7.69
 	go.mongodb.org/mongo-driver v1.9.1
 	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97
 	gopkg.in/yaml.v3 v3.0.1
@@ -20,6 +21,7 @@ require (
 require (
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/clbanning/mxj v1.8.4 // indirect
+	github.com/disintegration/imaging v1.6.2 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
@@ -39,13 +41,13 @@ require (
 	github.com/mozillazg/go-httpheader v0.2.1 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/tencentyun/cos-go-sdk-v5 v0.7.69 // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	github.com/vcaesar/cedar v0.20.1 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/scram v1.0.2 // indirect
 	github.com/xdg-go/stringprep v1.0.2 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
+	golang.org/x/image v0.0.0-20191009234506-e7c1f5e7dbb8 // indirect
 	golang.org/x/net v0.0.0-20210614182718-04defd469f4e // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.0.0-20210806184541-e5e7981a1069 // indirect

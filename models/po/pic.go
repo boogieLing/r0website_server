@@ -9,9 +9,12 @@ import (
 type Image struct {
 	ID         primitive.ObjectID `bson:"_id,omitempty"`  // MongoDB 主键
 	Name       string             `bson:"name"`           // 图片名称或标题
-	CosURL     string             `bson:"cos_url"`        // 腾讯云 COS 图片地址
+	CosURL     string             `bson:"cos_url"`        // 腾讯云 COS 原图地址
+	ThumbURL   string             `bson:"thumb_url"`      // 腾讯云 COS 缩略图地址
 	Width      int                `bson:"width"`          // 原始图片宽度（像素）
 	Height     int                `bson:"height"`         // 原始图片高度（像素）
+	ThumbWidth int                `bson:"thumb_width"`    // 缩略图宽度（像素）
+	ThumbHeight int               `bson:"thumb_height"`   // 缩略图高度（像素）
 	UploadedAt time.Time          `bson:"uploaded_at"`    // 上传时间
 	Tags       []string           `bson:"tags,omitempty"` // 可选：标签列表
 	EXIF       map[string]string  `bson:"exif,omitempty"` // 可选：EXIF 数据（相机型号、光圈等）

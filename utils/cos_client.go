@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
@@ -72,6 +73,25 @@ func (c *COSClient) UploadFile(file multipart.File, fileHeader *multipart.FileHe
 	return fileURL, nil
 }
 
+// UploadThumbnail 上传缩略图到COS
+func (c *COSClient) UploadThumbnail(thumbnailBytes []byte, originalFilename string, objectKey string) (string, error) {
+	if len(thumbnailBytes) == 0 {
+		return "", fmt.Errorf("缩略图数据不能为空")
+	}
+
+	// 上传缩略图
+	_, err := c.client.Object.Put(context.Background(), objectKey, bytes.NewReader(thumbnailBytes), nil)
+	if err != nil {
+		log.Printf("上传缩略图到COS失败: %v", err)
+		return "", err
+	}
+
+	// 构建访问URL
+	thumbnailURL := fmt.Sprintf("https://%s.cos.%s.myqcloud.com/%s", c.bucket, c.client.BaseURL.BucketURL.Host, objectKey)
+	log.Printf("缩略图上传成功: %s", thumbnailURL)
+	return thumbnailURL, nil
+}
+
 // GenerateObjectKey 生成COS对象存储路径
 func (c *COSClient) GenerateObjectKey(originalFilename string) string {
 	// 获取文件扩展名
@@ -83,6 +103,21 @@ func (c *COSClient) GenerateObjectKey(originalFilename string) string {
 	// 生成唯一文件名：时间戳 + 随机字符串
 	timestamp := time.Now().UnixNano()
 	uniqueName := fmt.Sprintf("somnium/primitive/%d%s", timestamp, ext)
+
+	return uniqueName
+}
+
+// GenerateThumbnailObjectKey 生成缩略图COS对象存储路径
+func (c *COSClient) GenerateThumbnailObjectKey(originalFilename string) string {
+	// 获取文件扩展名
+	ext := strings.ToLower(filepath.Ext(originalFilename))
+	if ext == "" {
+		ext = ".jpg" // 默认扩展名
+	}
+
+	// 生成唯一文件名：时间戳 + 随机字符串
+	timestamp := time.Now().UnixNano()
+	uniqueName := fmt.Sprintf("somnium/compressed/%d_thumb%s", timestamp, ext)
 
 	return uniqueName
 }

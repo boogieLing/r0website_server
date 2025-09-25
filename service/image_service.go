@@ -12,7 +12,6 @@ package service
 import (
 	"errors"
 	"fmt"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"image"
 	_ "image/gif"
 	_ "image/jpeg"
@@ -25,6 +24,8 @@ import (
 	"r0Website-server/utils"
 	"strings"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type ImageService struct {
@@ -35,7 +36,7 @@ type ImageService struct {
 }
 
 const (
-	MaxFileSize = 10 * 1024 * 1024 // 10MB
+	MaxFileSize = 100 * 1024 * 1024 // 100MB
 )
 
 var allowedImageTypes = []string{"image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"}
@@ -44,7 +45,7 @@ var allowedImageTypes = []string{"image/jpeg", "image/jpg", "image/png", "image/
 func (s *ImageService) UploadImage(file multipart.File, header *multipart.FileHeader, params vo.UploadImageVo) (*vo.ImageDetailVo, error) {
 	// 文件大小验证
 	if header.Size > MaxFileSize {
-		return nil, errors.New("文件大小不能超过10MB")
+		return nil, errors.New("文件大小不能超过100MB")
 	}
 
 	// 文件类型验证
@@ -62,6 +63,19 @@ func (s *ImageService) UploadImage(file multipart.File, header *multipart.FileHe
 	// 重置文件读取位置
 	file.Seek(0, 0)
 
+	// 生成缩略图
+	thumbnailBytes, thumbWidth, thumbHeight, err := utils.GenerateThumbnail(file, header, utils.DefaultThumbnailConfig)
+	if err != nil {
+		global.Logger.Errorf("生成缩略图失败: %v", err)
+		// 如果缩略图生成失败，继续上传原图，但不影响主流程
+		thumbnailBytes = nil
+		thumbWidth = 0
+		thumbHeight = 0
+	}
+
+	// 重置文件读取位置（用于原图上传）
+	file.Seek(0, 0)
+
 	// 生成COS对象键
 	objectKey := s.COSClient.GenerateObjectKey(header.Filename)
 
@@ -69,6 +83,18 @@ func (s *ImageService) UploadImage(file multipart.File, header *multipart.FileHe
 	cosURL, err := s.COSClient.UploadFile(file, header, objectKey)
 	if err != nil {
 		return nil, errors.New("上传文件失败")
+	}
+
+	// 上传缩略图（如果生成成功）
+	var thumbURL string
+	if thumbnailBytes != nil {
+		thumbObjectKey := s.COSClient.GenerateThumbnailObjectKey(header.Filename)
+		thumbURL, err = s.COSClient.UploadThumbnail(thumbnailBytes, header.Filename, thumbObjectKey)
+		if err != nil {
+			global.Logger.Errorf("上传缩略图失败: %v", err)
+			// 如果缩略图上传失败，继续主流程，但不影响原图上传
+			thumbURL = ""
+		}
 	}
 
 	// 创建图片名称
@@ -79,14 +105,17 @@ func (s *ImageService) UploadImage(file multipart.File, header *multipart.FileHe
 
 	// 创建图片记录
 	image := &po.Image{
-		Name:       imageName,
-		CosURL:     cosURL,
-		Width:      imgConfig.Width,
-		Height:     imgConfig.Height,
-		UploadedAt: time.Now(),
-		Tags:       params.Tags,
-		EXIF:       make(map[string]string),
-		Positions:  make(map[string]po.CategoryPosition),
+		Name:        imageName,
+		CosURL:      cosURL,
+		ThumbURL:    thumbURL,
+		Width:       imgConfig.Width,
+		Height:      imgConfig.Height,
+		ThumbWidth:  thumbWidth,
+		ThumbHeight: thumbHeight,
+		UploadedAt:  time.Now(),
+		Tags:        params.Tags,
+		EXIF:        make(map[string]string),
+		Positions:   make(map[string]po.CategoryPosition),
 	}
 
 	// 添加到nexus分类（默认分类）
@@ -145,17 +174,20 @@ func (s *ImageService) UploadImage(file multipart.File, header *multipart.FileHe
 
 	// 返回VO数据
 	return &vo.ImageDetailVo{
-		ID:         imageID,
-		Name:       imageName,
-		CosURL:     cosURL,
-		Width:      imgConfig.Width,
-		Height:     imgConfig.Height,
-		Size:       header.Size,
-		Format:     format,
-		Tags:       params.Tags,
-		Positions:  image.Positions,
-		UploadedAt: image.UploadedAt.Format(time.RFC3339),
-		Exif:       image.EXIF,
+		ID:          imageID,
+		Name:        imageName,
+		CosURL:      cosURL,
+		ThumbURL:    thumbURL,
+		Width:       imgConfig.Width,
+		Height:      imgConfig.Height,
+		ThumbWidth:  thumbWidth,
+		ThumbHeight: thumbHeight,
+		Size:        header.Size,
+		Format:      format,
+		Tags:        params.Tags,
+		Positions:   image.Positions,
+		UploadedAt:  image.UploadedAt.Format(time.RFC3339),
+		Exif:        image.EXIF,
 	}, nil
 }
 
@@ -215,17 +247,20 @@ func (s *ImageService) GetImagesByCategory(categoryID string, page, pageSize int
 		img, err := s.ImageDao.GetImageByID(ref.ImageID)
 		if err == nil {
 			images = append(images, vo.ImageDetailVo{
-				ID:         img.ID,
-				Name:       img.Name,
-				CosURL:     img.CosURL,
-				Width:      img.Width,
-				Height:     img.Height,
-				Size:       0, // Size信息在Image结构体中不存在
-				Format:     "", // Format信息在Image结构体中不存在
-				Tags:       img.Tags,
-				Positions:  img.Positions,
-				UploadedAt: img.UploadedAt.Format(time.RFC3339),
-				Exif:       img.EXIF,
+				ID:          img.ID,
+				Name:        img.Name,
+				CosURL:      img.CosURL,
+				ThumbURL:    img.ThumbURL,
+				Width:       img.Width,
+				Height:      img.Height,
+				ThumbWidth:  img.ThumbWidth,
+				ThumbHeight: img.ThumbHeight,
+				Size:        0,  // Size信息在Image结构体中不存在
+				Format:      "", // Format信息在Image结构体中不存在
+				Tags:        img.Tags,
+				Positions:   img.Positions,
+				UploadedAt:  img.UploadedAt.Format(time.RFC3339),
+				Exif:        img.EXIF,
 			})
 		}
 	}

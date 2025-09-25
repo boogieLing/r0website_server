@@ -22,17 +22,20 @@ type UploadImageVo struct {
 
 // ImageDetailVo 图片详情返回数据
 type ImageDetailVo struct {
-	ID         primitive.ObjectID            `json:"id"`
-	Name       string                        `json:"name"`
-	CosURL     string                        `json:"cos_url"`
-	Width      int                           `json:"width"`
-	Height     int                           `json:"height"`
-	Size       int64                         `json:"size"`
-	Format     string                        `json:"format"`
-	Tags       []string                      `json:"tags"`
-	Positions  map[string]po.CategoryPosition `json:"positions"`
-	UploadedAt string                        `json:"uploaded_at"`
-	Exif       map[string]string             `json:"exif"`
+	ID          primitive.ObjectID            `json:"id"`
+	Name        string                        `json:"name"`
+	CosURL      string                        `json:"cos_url"`
+	ThumbURL    string                        `json:"thumb_url"`    // 缩略图URL
+	Width       int                           `json:"width"`
+	Height      int                           `json:"height"`
+	ThumbWidth  int                           `json:"thumb_width"`  // 缩略图宽度
+	ThumbHeight int                           `json:"thumb_height"` // 缩略图高度
+	Size        int64                         `json:"size"`
+	Format      string                        `json:"format"`
+	Tags        []string                      `json:"tags"`
+	Positions   map[string]po.CategoryPosition `json:"positions"`
+	UploadedAt  string                        `json:"uploaded_at"`
+	Exif        map[string]string             `json:"exif"`
 }
 
 // ImageListVo 图片列表返回数据
