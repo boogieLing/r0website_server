@@ -4,10 +4,13 @@
 """
 import re
 import sys
+from pathlib import Path
+
+DOCS_DIR = Path(__file__).resolve().parent.parent / "docs"
 
 def test_new_jump_links():
     """测试新的API文档跳转链接"""
-    file_path = '/Volumes/R0sORICO/work_dir/r0website_server/API文档_新.md'
+    file_path = DOCS_DIR / "API文档_新.md"
 
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()

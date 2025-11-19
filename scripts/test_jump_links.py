@@ -4,6 +4,9 @@
 """
 import re
 import sys
+from pathlib import Path
+
+DOCS_DIR = Path(__file__).resolve().parent.parent / "docs"
 
 def test_jump_links(file_path):
     """测试跳转链接是否正常"""
@@ -56,6 +59,6 @@ def test_jump_links(file_path):
     return len(broken_links) == 0
 
 if __name__ == '__main__':
-    file_path = '/Volumes/R0sORICO/work_dir/r0website_server/API文档.md'
-    success = test_jump_links(file_path)
+    file_path = DOCS_DIR / "API文档.md"
+    success = test_jump_links(str(file_path))
     sys.exit(0 if success else 1)

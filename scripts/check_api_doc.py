@@ -4,6 +4,9 @@ API文档跳转系统检查和重构脚本
 """
 import re
 import sys
+from pathlib import Path
+
+DOCS_DIR = Path(__file__).resolve().parent.parent / "docs"
 
 def extract_headings(file_path):
     """提取所有标题及其位置"""
@@ -134,7 +137,7 @@ def generate_new_document(file_path):
     return final_lines, heading_map
 
 def main():
-    file_path = '/Volumes/R0sORICO/work_dir/r0website_server/API文档.md'
+    file_path = DOCS_DIR / "API文档.md"
 
     print("=== API文档跳转系统检查工具 ===\n")
 
@@ -160,7 +163,7 @@ def main():
         print(f"  '{title}' -> '#{anchor}'")
 
     # 4. 保存新文档
-    output_path = '/Volumes/R0sORICO/work_dir/r0website_server/API文档_新.md'
+    output_path = DOCS_DIR / "API文档_新.md"
     with open(output_path, 'w', encoding='utf-8') as f:
         f.writelines(new_content)
 

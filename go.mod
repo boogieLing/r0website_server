@@ -3,6 +3,7 @@ module r0Website-server
 go 1.17
 
 require (
+	github.com/disintegration/imaging v1.6.2
 	github.com/fvbock/endless v0.0.0-20170109170031-447134032cb6
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-ego/gse v0.70.2
@@ -21,7 +22,6 @@ require (
 require (
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/clbanning/mxj v1.8.4 // indirect
-	github.com/disintegration/imaging v1.6.2 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect

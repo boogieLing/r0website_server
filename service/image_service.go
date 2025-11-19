@@ -48,6 +48,12 @@ func (s *ImageService) UploadImage(file multipart.File, header *multipart.FileHe
 		return nil, errors.New("文件大小不能超过100MB")
 	}
 
+	// 确保默认图片分类已存在（例如 nexus）
+	if err := s.ImageCategoryDao.EnsureDefaultCategories(); err != nil {
+		global.Logger.Errorf("确保默认图片分类失败: %v", err)
+		// 不阻断上传流程，仅记录日志
+	}
+
 	// 文件类型验证
 	contentType := header.Header.Get("Content-Type")
 	if !isValidImageType(contentType) {
@@ -118,12 +124,20 @@ func (s *ImageService) UploadImage(file multipart.File, header *multipart.FileHe
 		Positions:   make(map[string]po.CategoryPosition),
 	}
 
+	// 默认分类位置使用缩略图大小（若缩略图失败则回退到原图大小）
+	posWidth := float64(thumbWidth)
+	posHeight := float64(thumbHeight)
+	if posWidth <= 0 || posHeight <= 0 {
+		posWidth = float64(imgConfig.Width)
+		posHeight = float64(imgConfig.Height)
+	}
+
 	// 添加到nexus分类（默认分类）
 	nexusPosition := po.CategoryPosition{
 		X:            0,
 		Y:            0,
-		Width:        float64(imgConfig.Width),
-		Height:       float64(imgConfig.Height),
+		Width:        posWidth,
+		Height:       posHeight,
 		GridX:        0,
 		GridY:        0,
 		GridSize:     10,

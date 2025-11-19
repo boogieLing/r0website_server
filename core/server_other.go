@@ -17,7 +17,7 @@ func initServer(port string, router *gin.Engine) server {
 	gin.SetMode(gin.ReleaseMode)
 	s := endless.NewServer(port, router)
 	s.ReadHeaderTimeout = 10 * time.Millisecond
-	s.WriteTimeout = 10 * time.Second
+	s.WriteTimeout = 60 * time.Second
 	s.MaxHeaderBytes = 1 << 20
 	s.BeforeBegin = func(_ string) {
 		fmt.Printf("r0website server in %d:%s\n", syscall.Getpid(), port)

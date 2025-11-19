@@ -67,8 +67,9 @@ func (c *COSClient) UploadFile(file multipart.File, fileHeader *multipart.FileHe
 		return "", err
 	}
 
-	// 构建访问URL
-	fileURL := fmt.Sprintf("https://%s.cos.%s.myqcloud.com/%s", c.bucket, c.client.BaseURL.BucketURL.Host, objectKey)
+	// 构建访问URL：直接复用 SDK 生成的 BucketURL，避免重复拼接 bucket 和域名
+	base := strings.TrimRight(c.client.BaseURL.BucketURL.String(), "/")
+	fileURL := fmt.Sprintf("%s/%s", base, objectKey)
 	log.Printf("文件上传成功: %s", fileURL)
 	return fileURL, nil
 }
@@ -86,8 +87,9 @@ func (c *COSClient) UploadThumbnail(thumbnailBytes []byte, originalFilename stri
 		return "", err
 	}
 
-	// 构建访问URL
-	thumbnailURL := fmt.Sprintf("https://%s.cos.%s.myqcloud.com/%s", c.bucket, c.client.BaseURL.BucketURL.Host, objectKey)
+	// 构建访问URL：与原图同样逻辑
+	base := strings.TrimRight(c.client.BaseURL.BucketURL.String(), "/")
+	thumbnailURL := fmt.Sprintf("%s/%s", base, objectKey)
 	log.Printf("缩略图上传成功: %s", thumbnailURL)
 	return thumbnailURL, nil
 }

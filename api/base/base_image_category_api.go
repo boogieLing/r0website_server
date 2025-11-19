@@ -106,6 +106,37 @@ func (c *ImageCategoryController) UpdateCategory(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"msg": "分类更新成功"})
 }
 
+// UpdateCategoryLayoutMode 更新分类的布局方式（layoutMode）
+func (c *ImageCategoryController) UpdateCategoryLayoutMode(ctx *gin.Context) {
+	categoryID := ctx.Param("id")
+	if categoryID == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "分类ID不能为空"})
+		return
+	}
+
+	var req struct {
+		LayoutMode string `json:"layoutMode" binding:"required"`
+	}
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	update := bson.M{
+		"$set": bson.M{
+			"settings.layoutMode": req.LayoutMode,
+		},
+	}
+
+	if err := c.ImageCategoryDao.UpdateCategory(categoryID, update); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "更新分类布局方式失败"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"msg": "分类布局方式已更新"})
+}
+
 // DeleteCategory 删除分类
 func (c *ImageCategoryController) DeleteCategory(ctx *gin.Context) {
 	categoryID := ctx.Param("id")
@@ -235,8 +266,8 @@ func (c *ImageCategoryController) UpdateImageSortOrder(ctx *gin.Context) {
 	}
 
 	var req struct {
-		ImageID    string `json:"imageId" binding:"required"`
-		SortOrder  int    `json:"sortOrder" binding:"required"`
+		ImageID   string `json:"imageId" binding:"required"`
+		SortOrder int    `json:"sortOrder" binding:"required"`
 	}
 
 	if err := ctx.ShouldBindJSON(&req); err != nil {

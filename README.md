@@ -9,6 +9,11 @@ r0Website server, using Golang development.
 
 目前仍在开发中。
 
+## 文档（docs/）
+
+- 接口说明：见 `docs/API文档.md` 及其兼容版、纯Markdown版。
+- 开发与架构说明：见 `docs/CLAUDE.md` 与根目录 `AGENTS.md`。
+
 ## r0Website
 
 个人网站整体开发进度、结构。

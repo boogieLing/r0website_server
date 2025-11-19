@@ -1,0 +1,80 @@
+mkdir: logs: File exists
+/Volumes/R0sORICO/work_dir/r0website_server/logs/2025-09/24.log
+2025/09/24 18:00:49 Dict files path:  [/Users/r0/go/pkg/mod/github.com/go-ego/gse@v0.70.2/data/dict/zh/s_1.txt]
+2025/09/24 18:00:49 Load the gse dictionary: "/Users/r0/go/pkg/mod/github.com/go-ego/gse@v0.70.2/data/dict/zh/s_1.txt" 
+2025/09/24 18:00:49 Gse dictionary loaded finished.
+=== Connected MongoDB:r0website_server ===
+✅ Pic-related Mongo indexes ensured
+[R0IOC]	 SystemConfig 	---->	 &{SystemConfig config.SystemConfig 0x14008a686c0 <nil>}
+[R0IOC]	 COSClient 	---->	 &{COSClient utils.COSClient 0x140112ac1b0 <nil>}
+[R0IOC]	 BasicDaoMongo 	---->	 &{BasicDaoMongo dao.BasicDaoMongo 0x14011271ca0 0x102ca7ce0}
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] POST   /api/base/login           --> r0Website-server/api/base.(*UserController).Login-fm (5 handlers)
+[GIN-debug] POST   /api/base/register        --> r0Website-server/api/base.(*UserController).Register-fm (5 handlers)
+[GIN-debug] GET    /api/base/article         --> r0Website-server/api/base.(*ArticleController).ArticleSearch-fm (5 handlers)
+[GIN-debug] GET    /api/base/article/:id     --> r0Website-server/api/base.(*ArticleController).ArticleSearch-fm (5 handlers)
+[GIN-debug] PUT    /api/base/article/:id/pv  --> r0Website-server/api/base.(*ArticleController).AddPV-fm (5 handlers)
+[GIN-debug] PUT    /api/base/article/:id/praise --> r0Website-server/api/base.(*ArticleController).AddPraise-fm (5 handlers)
+[GIN-debug] GET    /api/base/article/category/:name --> r0Website-server/api/base.(*ArticleController).ArticleInCategory-fm (5 handlers)
+[GIN-debug] POST   /api/base/picbed/album    --> r0Website-server/api/base.(*PicBedAlbumController).CreateAlbum-fm (5 handlers)
+[GIN-debug] GET    /api/base/picbed/album/:id --> r0Website-server/api/base.(*PicBedAlbumController).GetAlbumDetail-fm (5 handlers)
+[GIN-debug] GET    /api/base/picbed/album    --> r0Website-server/api/base.(*PicBedAlbumController).ListAlbums-fm (5 handlers)
+[GIN-debug] GET    /api/base/picbed/album/tag/:tag --> r0Website-server/api/base.(*PicBedAlbumController).FindAlbumsByTag-fm (5 handlers)
+[GIN-debug] GET    /api/base/picbed/album/author/:author --> r0Website-server/api/base.(*PicBedAlbumController).FindByAuthor-fm (5 handlers)
+[GIN-debug] GET    /api/base/picbed/album/search/:kw --> r0Website-server/api/base.(*PicBedAlbumController).SearchByKeyword-fm (5 handlers)
+[GIN-debug] PUT    /api/base/picbed/album/:id --> r0Website-server/api/base.(*PicBedAlbumController).UpdateAlbum-fm (5 handlers)
+[GIN-debug] DELETE /api/base/picbed/album/:id --> r0Website-server/api/base.(*PicBedAlbumController).DeleteAlbum-fm (5 handlers)
+[GIN-debug] PUT    /api/base/picbed/album/:id/image --> r0Website-server/api/base.(*PicBedAlbumController).AddOrUpdateImageRef-fm (5 handlers)
+[GIN-debug] PUT    /api/base/picbed/album/:id/image/:imageId/layout --> r0Website-server/api/base.(*PicBedAlbumController).UpdateImageLayout-fm (5 handlers)
+[GIN-debug] DELETE /api/base/picbed/album/:id/image/:imageId --> r0Website-server/api/base.(*PicBedAlbumController).RemoveImageFromAlbum-fm (5 handlers)
+[GIN-debug] PUT    /api/base/picbed/image/move --> r0Website-server/api/base.(*PicBedAlbumController).MoveImageToAnotherAlbum-fm (5 handlers)
+[GIN-debug] POST   /api/base/picbed/image    --> r0Website-server/api/base.(*PicBedImageController).UploadImage-fm (5 handlers)
+[GIN-debug] GET    /api/base/picbed/image/:id --> r0Website-server/api/base.(*PicBedImageController).GetImageDetail-fm (5 handlers)
+[GIN-debug] GET    /api/base/picbed/image    --> r0Website-server/api/base.(*PicBedImageController).ListImages-fm (5 handlers)
+[GIN-debug] GET    /api/base/picbed/image/tag/:tag --> r0Website-server/api/base.(*PicBedImageController).FindImagesByTag-fm (5 handlers)
+[GIN-debug] GET    /api/base/picbed/image/search/:kw --> r0Website-server/api/base.(*PicBedImageController).SearchImageByName-fm (5 handlers)
+[GIN-debug] GET    /api/base/picbed/image/:id/albums --> r0Website-server/api/base.(*PicBedImageController).GetImageAlbums-fm (5 handlers)
+[GIN-debug] DELETE /api/base/picbed/image/:id --> r0Website-server/api/base.(*PicBedImageController).DeleteImage-fm (5 handlers)
+[GIN-debug] PUT    /api/base/picbed/image/:id/position --> r0Website-server/api/base.(*PicBedImageController).UpdateImagePosition-fm (5 handlers)
+[GIN-debug] DELETE /api/base/picbed/image/:id/category --> r0Website-server/api/base.(*PicBedImageController).RemoveImageFromCategory-fm (5 handlers)
+[GIN-debug] GET    /api/base/picbed/image/category/:categoryId --> r0Website-server/api/base.(*PicBedImageController).GetImagesByCategory-fm (5 handlers)
+[GIN-debug] POST   /api/base/picbed/category --> r0Website-server/api/base.(*ImageCategoryController).CreateCategory-fm (5 handlers)
+[GIN-debug] GET    /api/base/picbed/category --> r0Website-server/api/base.(*ImageCategoryController).ListCategories-fm (5 handlers)
+[GIN-debug] GET    /api/base/picbed/category/:id --> r0Website-server/api/base.(*ImageCategoryController).GetCategory-fm (5 handlers)
+[GIN-debug] PUT    /api/base/picbed/category/:id --> r0Website-server/api/base.(*ImageCategoryController).UpdateCategory-fm (5 handlers)
+[GIN-debug] DELETE /api/base/picbed/category/:id --> r0Website-server/api/base.(*ImageCategoryController).DeleteCategory-fm (5 handlers)
+[GIN-debug] GET    /api/base/picbed/category/:id/images --> r0Website-server/api/base.(*ImageCategoryController).GetCategoryImages-fm (5 handlers)
+[GIN-debug] POST   /api/base/picbed/category/:id/images --> r0Website-server/api/base.(*ImageCategoryController).AddImageToCategory-fm (5 handlers)
+[GIN-debug] DELETE /api/base/picbed/category/:id/images --> r0Website-server/api/base.(*ImageCategoryController).RemoveImageFromCategory-fm (5 handlers)
+[GIN-debug] PUT    /api/base/picbed/category/:id/images/sort --> r0Website-server/api/base.(*ImageCategoryController).UpdateImageSortOrder-fm (5 handlers)
+[GIN-debug] PUT    /api/base/picbed/category/:id/cover --> r0Website-server/api/base.(*ImageCategoryController).SetCategoryCover-fm (5 handlers)
+[GIN-debug] POST   /api/base/picbed/tag      --> r0Website-server/api/base.(*TagController).CreateTag-fm (5 handlers)
+[GIN-debug] GET    /api/base/picbed/tag      --> r0Website-server/api/base.(*TagController).ListTags-fm (5 handlers)
+[GIN-debug] GET    /api/base/picbed/tag/popular --> r0Website-server/api/base.(*TagController).GetPopularTags-fm (5 handlers)
+[GIN-debug] GET    /api/base/picbed/tag/search --> r0Website-server/api/base.(*TagController).SearchTags-fm (5 handlers)
+[GIN-debug] POST   /api/base/picbed/tag/batch --> r0Website-server/api/base.(*TagController).BatchCreateTags-fm (5 handlers)
+[GIN-debug] GET    /api/base/picbed/tag/:id  --> r0Website-server/api/base.(*TagController).GetTag-fm (5 handlers)
+[GIN-debug] PUT    /api/base/picbed/tag/:id  --> r0Website-server/api/base.(*TagController).UpdateTag-fm (5 handlers)
+[GIN-debug] DELETE /api/base/picbed/tag/:id  --> r0Website-server/api/base.(*TagController).DeleteTag-fm (5 handlers)
+[GIN-debug] GET    /api/base/picbed/tag/:id/images --> r0Website-server/api/base.(*TagController).GetTagImages-fm (5 handlers)
+[GIN-debug] GET    /api/base/category/all    --> r0Website-server/api/base.(*CategoryController).All-fm (5 handlers)
+[GIN-debug] POST   /api/admin/login          --> r0Website-server/api/admin.(*UserController).Login-fm (5 handlers)
+[GIN-debug] POST   /api/admin/article        --> r0Website-server/api/admin.(*ArticleController).ArticleFormWay-fm (6 handlers)
+[GIN-debug] POST   /api/admin/article/:id    --> r0Website-server/api/admin.(*ArticleController).ArticleFormWay-fm (6 handlers)
+[GIN-debug] DELETE /api/admin/article/:id    --> r0Website-server/api/admin.(*ArticleController).ArticleDelete-fm (6 handlers)
+[GIN-debug] POST   /api/admin/article/upload --> r0Website-server/api/admin.(*ArticleController).ArticleFileWay-fm (6 handlers)
+[GIN-debug] POST   /api/admin/article/upload/:id --> r0Website-server/api/admin.(*ArticleController).ArticleFileWay-fm (6 handlers)
+[GIN-debug] POST   /api/admin/category/archive --> r0Website-server/api/admin.(*CategoryController).ArchiveArticle-fm (6 handlers)
+r0website server in 85761::8202
+pid in /Volumes/R0sORICO/work_dir/r0website_server/.pid
+[GIN] 2025/09/24 - 18:01:08 | 200 |   13.088167ms |             ::1 | GET      "/api/base/picbed/image"
+[GIN] 2025/09/24 - 18:01:40 | 400 |     252.875µs |             ::1 | POST     "/api/base/picbed/image"
+2025/09/24 20:06:02 85761 Received SIGTERM.
+2025/09/24 20:06:02 85761 Waiting for connections to finish...
+2025/09/24 20:06:02 85761 Serve() returning...
+2025/09/24 20:06:02 85761 [::]:8202 Listener closed.

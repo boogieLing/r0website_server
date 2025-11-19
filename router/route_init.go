@@ -10,12 +10,13 @@
 package router
 
 import (
-	"github.com/gin-gonic/gin"
 	"r0Website-server/global"
 	"r0Website-server/middleware"
 	"r0Website-server/r0Ioc"
 	"r0Website-server/router/admin"
 	"r0Website-server/router/base"
+
+	"github.com/gin-gonic/gin"
 )
 
 // Routers 配置路由，依赖gin
@@ -35,6 +36,7 @@ func Routers() *gin.Engine {
 	}
 
 	engine := gin.Default()
+	engine.MaxMultipartMemory = 64 << 20 // 允许更大的 multipart 表单
 	engine.Use(middleware.Logger())
 	engine.Use(middleware.Cors())
 

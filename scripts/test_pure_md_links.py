@@ -3,10 +3,13 @@
 测试纯Markdown格式的跳转链接
 """
 import re
+from pathlib import Path
+
+DOCS_DIR = Path(__file__).resolve().parent.parent / "docs"
 
 def test_pure_md_links():
     """测试纯Markdown版本的跳转链接"""
-    file_path = '/Volumes/R0sORICO/work_dir/r0website_server/API文档.md'
+    file_path = DOCS_DIR / "API文档.md"
 
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
